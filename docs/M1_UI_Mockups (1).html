@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M1 — Identity, Onboarding &amp; Account · UI Screen Mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0D1B2A; --navy:#1F3A5F; --paper:#F4F6F9; --surface:#fff;
+  --line:#DCE3EA; --line-soft:#EDF1F5;
+  --text:#16202B; --muted:#5D6B7A; --faint:#8C99A6;
+  --action:#1E6FA8; --action-dark:#175A88; --action-soft:#E8F1F8;
+  --profit:#0F6E56; --profit-soft:#E4F4EE;
+  --loss:#A8341A; --loss-soft:#FBEBE6;
+  --warn:#8A6A00; --warn-soft:#FBF3DC;
+  --r:10px; --rs:7px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:15px;line-height:1.55;}
+.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+h1,h2,h3,h4{margin:0;line-height:1.25;font-weight:600}
+a{color:var(--action)}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--action);outline-offset:2px;border-radius:4px}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:var(--ink);color:#fff;
+  padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  border-bottom:1px solid #0a1420}
+.topbar .brand{font-weight:700;letter-spacing:-.01em;font-size:16px}
+.topbar .tag{font-size:11px;padding:3px 7px;border-radius:5px;background:#1E3549;color:#9FC4E0;letter-spacing:.06em}
+.topbar .sub{color:#93A7B8;font-size:13px;flex:1;min-width:180px}
+.topbar .legend{display:flex;gap:12px;font-size:11.5px;color:#93A7B8;flex-wrap:wrap}
+.topbar .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+
+/* ---------- shell ---------- */
+.shell{display:flex;align-items:flex-start;gap:24px;max-width:1500px;margin:0 auto;padding:24px 20px 80px}
+.rail{position:sticky;top:74px;width:238px;flex:0 0 238px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);padding:10px;max-height:calc(100vh - 100px);overflow:auto}
+.rail h4{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);
+  padding:6px 8px 8px}
+.rail a{display:flex;gap:9px;align-items:baseline;padding:7px 9px;border-radius:var(--rs);
+  text-decoration:none;color:var(--text);font-size:13.5px}
+.rail a:hover{background:var(--paper)}
+.rail a .n{font-size:10.5px;color:var(--faint);letter-spacing:.02em}
+main{flex:1;min-width:0;display:flex;flex-direction:column;gap:22px}
+
+/* ---------- screen card ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.card-head{padding:16px 18px 14px;border-bottom:1px solid var(--line-soft)}
+.card-head .idline{display:flex;align-items:center;gap:10px;margin-bottom:5px;flex-wrap:wrap}
+.card-head .sid{font-size:11px;font-weight:700;color:var(--action);background:var(--action-soft);
+  padding:2px 7px;border-radius:5px;letter-spacing:.04em}
+.card-head h2{font-size:16.5px}
+.card-head .purpose{margin:0;color:var(--muted);font-size:13.5px;max-width:70ch}
+.card-tools{display:flex;gap:14px;justify-content:space-between;align-items:center;
+  padding:10px 18px;background:#FAFBFC;border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
+.seg{display:flex;gap:3px;background:#EBEFF3;padding:3px;border-radius:8px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;color:var(--muted);font-size:11.5px;font-weight:500;
+  padding:5px 10px;border-radius:6px;letter-spacing:.02em}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);
+  box-shadow:0 1px 2px rgba(13,27,42,.13);font-weight:600}
+.tool-lab{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-right:2px;align-self:center}
+
+/* stage */
+.stage{padding:22px 18px;background:
+  linear-gradient(0deg,rgba(13,27,42,.025),rgba(13,27,42,.025)),var(--surface);
+  display:flex;justify-content:center}
+.frame{width:100%;max-width:920px;transition:max-width .18s ease}
+.stage[data-vp="mobile"] .frame{max-width:378px}
+.app{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;box-shadow:0 1px 3px rgba(13,27,42,.06)}
+
+/* notes */
+.notes{border-top:1px solid var(--line-soft);padding:14px 18px 16px;background:#FBFCFD}
+.notes h5{margin:0 0 7px;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+.notes ul{margin:0 0 12px;padding-left:17px;color:var(--muted);font-size:13px}
+.notes ul:last-child{margin-bottom:0}
+.notes li{margin-bottom:3px}
+.notes .k{color:var(--text);font-weight:600}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:11px;padding:3px 8px;border-radius:20px;background:var(--paper);
+  border:1px solid var(--line);color:var(--muted)}
+
+/* ---------- in-app UI kit ---------- */
+.scr{padding:26px 24px}
+.scr-narrow{max-width:400px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:9px;margin-bottom:22px}
+.logo .mark{width:28px;height:28px;border-radius:7px;background:var(--navy);color:#fff;
+  display:grid;place-items:center;font-size:13px;font-weight:700}
+.logo b{font-size:15px;letter-spacing:-.01em}
+.scr h3{font-size:20px;letter-spacing:-.015em;margin-bottom:5px}
+.scr .lede{color:var(--muted);font-size:13.5px;margin:0 0 20px}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px}
+.input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:var(--rs);
+  background:var(--surface);font-size:14px;color:var(--text)}
+.input::placeholder{color:var(--faint)}
+.input:focus{outline:none;border-color:var(--action);box-shadow:0 0 0 3px rgba(30,111,168,.13)}
+.input-wrap{position:relative;display:flex;align-items:center}
+.input-wrap .ghost{position:absolute;right:10px;font-size:11.5px;color:var(--action);
+  background:none;border:0;font-weight:600}
+.hint{font-size:11.5px;color:var(--faint);margin-top:5px}
+.err-txt{font-size:12px;color:var(--loss);margin-top:5px;display:none;align-items:center;gap:5px}
+.field.bad .input{border-color:var(--loss);background:#fffafa}
+.field.bad .err-txt{display:flex}
+
+.btn{width:100%;padding:11px 14px;border-radius:var(--rs);border:1px solid transparent;
+  font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:var(--action);color:#fff}
+.btn-primary:hover{background:var(--action-dark)}
+.btn-ghost{background:var(--surface);border-color:var(--line);color:var(--text)}
+.btn-ghost:hover{background:var(--paper)}
+.btn-danger{background:var(--loss);color:#fff}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn-row{display:flex;gap:10px}
+.btn-sm{width:auto;padding:7px 12px;font-size:12.5px}
+
+.sep{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--faint);font-size:11.5px}
+.sep::before,.sep::after{content:"";flex:1;height:1px;background:var(--line)}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;
+  padding:10px;border:1px solid var(--line);border-radius:var(--rs);background:var(--surface);
+  font-size:14px;font-weight:500}
+.gbtn:hover{background:var(--paper)}
+.gbtn .g{width:17px;height:17px;border-radius:50%;background:conic-gradient(#EA4335 0 25%,#FBBC05 0 50%,#34A853 0 75%,#4285F4 0);flex:0 0 auto}
+.footnote{text-align:center;font-size:12.5px;color:var(--muted);margin-top:16px}
+.checkrow{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--muted);margin:4px 0 16px}
+.checkrow input{margin-top:2px;accent-color:var(--action)}
+
+.spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;
+  border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spinner{animation:none}*{transition:none!important}}
+
+.banner{display:flex;gap:10px;padding:11px 13px;border-radius:var(--rs);font-size:13px;
+  margin-bottom:16px;align-items:flex-start;line-height:1.45}
+.banner b{display:block;margin-bottom:1px}
+.b-err{background:var(--loss-soft);color:#7d2612;border:1px solid #f0cdc2}
+.b-ok{background:var(--profit-soft);color:#0a5442;border:1px solid #bfe3d7}
+.b-warn{background:var(--warn-soft);color:#6B5200;border:1px solid #ecd9a4}
+.b-info{background:var(--action-soft);color:#155580;border:1px solid #c9e0f0}
+
+.pane{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 17px;margin-bottom:14px}
+.pane h4{font-size:14px;margin-bottom:3px}
+.pane .sub{color:var(--muted);font-size:12.5px;margin:0 0 13px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.row:last-child{border-bottom:0;padding-bottom:0}
+.row .l{font-size:13.5px;font-weight:500}
+.row .d{font-size:12px;color:var(--faint);margin-top:1px}
+.toggle{width:38px;height:22px;border-radius:20px;background:#CBD5DE;border:0;position:relative;flex:0 0 auto}
+.toggle::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+  background:#fff;transition:transform .16s ease}
+.toggle[aria-pressed="true"]{background:var(--action)}
+.toggle[aria-pressed="true"]::after{transform:translateX(16px)}
+.badge{font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:5px;letter-spacing:.03em}
+.bg-ok{background:var(--profit-soft);color:var(--profit)}
+.bg-warn{background:var(--warn-soft);color:var(--warn)}
+.bg-off{background:var(--paper);color:var(--muted);border:1px solid var(--line)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stage[data-vp="mobile"] .grid2{grid-template-columns:1fr}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+
+.slide{text-align:center;padding:14px 6px 4px}
+.slide .art{height:132px;border-radius:var(--r);margin-bottom:20px;display:grid;place-items:center;
+  border:1px solid var(--line)}
+.slide h3{font-size:19px;margin-bottom:7px}
+.slide p{color:var(--muted);font-size:13.5px;margin:0 auto;max-width:34ch}
+.dots{display:flex;gap:6px;justify-content:center;margin:20px 0 16px}
+.dots i{width:6px;height:6px;border-radius:50%;background:#CBD5DE}
+.dots i.on{background:var(--action);width:18px;border-radius:3px}
+.skiprow{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.linkbtn{background:none;border:0;color:var(--muted);font-size:13px;padding:8px 0}
+
+.strength{display:flex;gap:4px;margin-top:7px}
+.strength i{height:3px;flex:1;border-radius:2px;background:#E3E8ED}
+.strength i.on{background:var(--profit)}
+.strength.weak i.on{background:var(--loss)}
+.strength.mid i.on{background:var(--warn)}
+
+.sess{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line-soft);align-items:flex-start}
+.sess:last-of-type{border-bottom:0}
+.sess .meta{font-size:12px;color:var(--faint);margin-top:2px}
+.empty{text-align:center;padding:26px 10px;color:var(--muted)}
+.empty .ico{width:38px;height:38px;border-radius:10px;background:var(--paper);border:1px solid var(--line);
+  display:grid;place-items:center;margin:0 auto 10px;font-size:17px}
+.tzpick{display:flex;gap:8px;align-items:center}
+.tzpick .input{flex:1}
+.codebox{font-size:12.5px;padding:9px 11px;background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--rs);color:var(--muted)}
+
+/* state visibility is applied by script so each element keeps its natural display type */
+
+/* responsive */
+@media(max-width:960px){
+  .shell{flex-direction:column;padding:16px 14px 60px;gap:14px}
+  .rail{position:static;width:100%;flex:none;max-height:none;display:flex;gap:6px;overflow-x:auto;padding:8px}
+  .rail h4{display:none}
+  .rail a{white-space:nowrap;background:var(--paper);border:1px solid var(--line)}
+  .stage{padding:16px 12px}
+  .card-tools{gap:10px}
+}
+@media(max-width:520px){
+  .scr{padding:20px 16px}
+  .topbar .legend{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="brand">Trading Journal</span>
+  <span class="tag mono">M1</span>
+  <span class="sub">Identity, Onboarding &amp; Account — UI screen mockups · v1.0</span>
+  <span class="legend">
+    <span><i style="background:#1E6FA8"></i>action</span>
+    <span><i style="background:#0F6E56"></i>profit / success</span>
+    <span><i style="background:#A8341A"></i>loss / destructive</span>
+    <span><i style="background:#8A6A00"></i>warning</span>
+  </span>
+</header>
+
+<div class="shell">
+  <nav class="rail" aria-label="Screen index">
+    <h4>Screens</h4>
+    <a href="#M1-S01"><span class="n mono">S01</span> Welcome &amp; intro</a>
+    <a href="#M1-S02"><span class="n mono">S02</span> Create account</a>
+    <a href="#M1-S03"><span class="n mono">S03</span> Sign in</a>
+    <a href="#M1-S04"><span class="n mono">S04</span> Verify email</a>
+    <a href="#M1-S05"><span class="n mono">S05</span> Reset password</a>
+    <a href="#M1-S06"><span class="n mono">S06</span> First-run setup</a>
+    <a href="#M1-S07"><span class="n mono">S07</span> Profile</a>
+    <a href="#M1-S08"><span class="n mono">S08</span> Security</a>
+    <a href="#M1-S09"><span class="n mono">S09</span> Privacy &amp; data</a>
+    <a href="#M1-S10"><span class="n mono">S10</span> Delete account</a>
+  </nav>
+
+  <main>
+
+  <!-- ================= S01 ================= -->
+  <section class="card" id="M1-S01" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M1-S01</span><h2>Welcome &amp; intro swipes</h2></div>
+      <p class="purpose">First-run carousel that explains the product in three beats. Skippable at any point — it must never block a returning user.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">Slide</span>
+        <button data-set="default" aria-pressed="true">1</button>
+        <button data-set="s2" aria-pressed="false">2</button>
+        <button data-set="s3" aria-pressed="false">3</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr"><div class="scr-narrow">
+        <div class="logo"><span class="mark">TJ</span><b>Trading Journal</b></div>
+
+        <div class="slide" data-when="default">
+          <div class="art" style="background:var(--action-soft)"><span style="font-size:34px">🔗</span></div>
+          <h3>Every trade, captured</h3>
+          <p>Connect MT5 or cTrader once. Your trades import themselves — past and live.</p>
+        </div>
+        <div class="slide" data-when="s2">
+          <div class="art" style="background:var(--profit-soft)"><span style="font-size:34px">📊</span></div>
+          <h3>See what actually works</h3>
+          <p>Win rate by session, your best strategy, and the outliers that skew your numbers.</p>
+        </div>
+        <div class="slide" data-when="s3">
+          <div class="art" style="background:var(--warn-soft)"><span style="font-size:34px">🧭</span></div>
+          <h3>A coach, not a spreadsheet</h3>
+          <p>An honest day-end review that tells you the one thing to fix — and keeps you going.</p>
+        </div>
+
+        <div class="dots">
+          <i class="on" data-when="default"></i><i data-when="s2 s3"></i>
+          <i data-when="default s3"></i><i class="on" data-when="s2"></i>
+          <i data-when="default s2"></i><i class="on" data-when="s3"></i>
+        </div>
+
+        <button class="btn btn-primary" data-when="default s2">Next</button>
+        <button class="btn btn-primary" data-when="s3">Create your account</button>
+        <div class="skiprow">
+          <button class="linkbtn" data-when="default s2">Skip</button>
+          <span data-when="s3"></span>
+          <button class="linkbtn">I already have an account</button>
+        </div>
+      </div></div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Carousel</span> — 3 slides, swipe on touch, arrow keys on desktop, dot indicator is tappable.</li>
+        <li><span class="k">Primary action</span> — “Next” on slides 1–2, “Create your account” on slide 3.</li>
+        <li><span class="k">Escape hatches</span> — “Skip” and “I already have an account” on every slide.</li>
+      </ul>
+      <h5>States &amp; rules</h5>
+      <ul>
+        <li>Shown once per device. Completion or skip is recorded on <span class="mono">OnboardingProgress</span>.</li>
+        <li>Never shown to an authenticated user with <span class="mono">intro_seen = true</span>.</li>
+        <li>No account required to view — this screen is fully public.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-06</span><span class="chip">public route</span><span class="chip">skippable</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S02 ================= -->
+  <section class="card" id="M1-S02" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M1-S02</span><h2>Create account</h2></div>
+      <p class="purpose">Email + password registration with Google as the one-tap alternative. Consent is explicit and unbundled.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="default" aria-pressed="true">Default</button>
+        <button data-set="error" aria-pressed="false">Error</button>
+        <button data-set="loading" aria-pressed="false">Loading</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr"><div class="scr-narrow">
+        <div class="logo"><span class="mark">TJ</span><b>Trading Journal</b></div>
+        <h3>Create your account</h3>
+        <p class="lede">Free to start. No card needed.</p>
+
+        <div class="banner b-err" data-when="error">
+          <span>⚠️</span><span><b>That email is already registered</b>Sign in instead, or reset your password.</span>
+        </div>
+
+        <button class="gbtn"><span class="g"></span> Continue with Google</button>
+        <div class="sep">or</div>
+
+        <div class="field"><label>Email</label>
+          <input class="input" type="email" value="raj@example.com" placeholder="you@example.com">
+        </div>
+        <div class="field" data-when="default loading">
+          <label>Password</label>
+          <div class="input-wrap"><input class="input" type="password" value="········••"><button class="ghost">Show</button></div>
+          <div class="strength"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+          <div class="hint">At least 10 characters. Avoid your email or common words.</div>
+        </div>
+        <div class="field bad" data-when="error">
+          <label>Password</label>
+          <div class="input-wrap"><input class="input" type="password" value="·······"><button class="ghost">Show</button></div>
+          <div class="strength weak"><i class="on"></i><i></i><i></i><i></i></div>
+          <div class="err-txt">✕ Too short — use at least 10 characters.</div>
+        </div>
+
+        <label class="checkrow"><input type="checkbox" checked>
+          <span>I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>, and I understand this app is a journal — it does not give financial advice.</span></label>
+        <label class="checkrow"><input type="checkbox">
+          <span>Send me product updates. <span style="color:var(--faint)">(Optional — you can change this any time.)</span></span></label>
+
+        <button class="btn btn-primary" data-when="default error">Create account</button>
+        <button class="btn btn-primary" data-when="loading" disabled><span class="spinner"></span> Creating your account…</button>
+        <p class="footnote">Already have an account? <a href="#">Sign in</a></p>
+      </div></div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Google button placed first</span> — the fastest path, and it arrives pre-verified.</li>
+        <li><span class="k">Password strength meter</span> — live, advisory; it never blocks submission on its own.</li>
+        <li><span class="k">Two separate checkboxes</span> — terms consent and marketing consent must not be bundled (GDPR Art. 7).</li>
+        <li><span class="k">Risk disclaimer</span> sits inside the terms line, not buried in a footer.</li>
+      </ul>
+      <h5>Validation &amp; states</h5>
+      <ul>
+        <li>Client-side: email format, password ≥ 10 chars, terms checked. Server re-validates all three.</li>
+        <li>Duplicate email returns a friendly banner — but see S03 for why sign-<em>in</em> stays deliberately vague.</li>
+        <li>Submit disables during request; double-submit is idempotent on the server.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-01</span><span class="chip mono">US-02</span><span class="chip mono">US-13</span><span class="chip">rate-limited</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S03 ================= -->
+  <section class="card" id="M1-S03" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M1-S03</span><h2>Sign in</h2></div>
+      <p class="purpose">Returning-user entry. Error copy is intentionally generic so the form cannot be used to discover which emails exist.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="default" aria-pressed="true">Default</button>
+        <button data-set="error" aria-pressed="false">Bad credentials</button>
+        <button data-set="locked" aria-pressed="false">Locked out</button>
+        <button data-set="loading" aria-pressed="false">Loading</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr"><div class="scr-narrow">
+        <div class="logo"><span class="mark">TJ</span><b>Trading Journal</b></div>
+        <h3>Sign in</h3>
+        <p class="lede">Pick up where you left off.</p>
+
+        <div class="banner b-err" data-when="error">
+          <span>⚠️</span><span><b>Email or password is incorrect</b>Check both and try again.</span>
+        </div>
+        <div class="banner b-warn" data-when="locked">
+          <span>⏳</span><span><b>Too many attempts</b>Try again in 14:32, or reset your password now.</span>
+        </div>
+
+        <button class="gbtn"><span class="g"></span> Continue with Google</button>
+        <div class="sep">or</div>
+
+        <div class="field"><label>Email</label><input class="input" type="email" value="raj@example.com"></div>
+        <div class="field"><label>Password</label>
+          <div class="input-wrap"><input class="input" type="password" value="··········"><button class="ghost">Show</button></div>
+        </div>
+        <div class="row" style="padding:2px 0 16px;border:0">
+          <label class="checkrow" style="margin:0"><input type="checkbox" checked> <span>Keep me signed in</span></label>
+          <a href="#" style="font-size:12.5px">Forgot password?</a>
+        </div>
+
+        <button class="btn btn-primary" data-when="default error">Sign in</button>
+        <button class="btn btn-primary" data-when="loading" disabled><span class="spinner"></span> Signing in…</button>
+        <button class="btn btn-primary" data-when="locked" disabled>Sign in</button>
+        <p class="footnote">New here? <a href="#">Create an account</a></p>
+      </div></div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Security-driven copy</h5>
+      <ul>
+        <li><span class="k">One generic error</span> for wrong email, wrong password, and unknown account — prevents account enumeration.</li>
+        <li><span class="k">Lockout after 5 failures</span> in 15 minutes, with a live countdown and a reset shortcut so the user is never stranded.</li>
+        <li><span class="k">“Keep me signed in”</span> extends refresh-token life; unchecked sessions end when the browser closes.</li>
+      </ul>
+      <h5>States</h5>
+      <ul>
+        <li>Unverified accounts sign in successfully but land on the S04 verification wall, not the dashboard.</li>
+        <li>Timing is equalised on failure so response speed cannot leak whether an account exists.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-04</span><span class="chip mono">US-14</span><span class="chip">no enumeration</span><span class="chip">rate-limited</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S04 ================= -->
+  <section class="card" id="M1-S04" data-state="sent">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M1-S04</span><h2>Verify email</h2></div>
+      <p class="purpose">The wall between a new account and the app. Verification protects deliverability and is the anchor for account recovery.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="sent" aria-pressed="true">Link sent</button>
+        <button data-set="loading" aria-pressed="false">Resending</button>
+        <button data-set="expired" aria-pressed="false">Expired</button>
+        <button data-set="success" aria-pressed="false">Verified</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr"><div class="scr-narrow" style="text-align:center">
+        <div class="logo" style="justify-content:center"><span class="mark">TJ</span><b>Trading Journal</b></div>
+
+        <div data-when="sent loading">
+          <div style="font-size:40px;margin-bottom:10px">📬</div>
+          <h3>Check your inbox</h3>
+          <p class="lede">We sent a verification link to <b style="color:var(--text)">raj@example.com</b>. It expires in 24 hours.</p>
+          <button class="btn btn-ghost" data-when="sent">Resend link</button>
+          <button class="btn btn-ghost" data-when="loading" disabled><span class="spinner" style="border-color:rgba(0,0,0,.2);border-top-color:var(--muted)"></span> Sending…</button>
+          <p class="footnote">Wrong address? <a href="#">Change email</a></p>
+        </div>
+
+        <div data-when="expired">
+          <div style="font-size:40px;margin-bottom:10px">⌛</div>
+          <h3>This link has expired</h3>
+          <p class="lede">Verification links are valid for 24 hours. Request a fresh one and we’ll send it straight away.</p>
+          <button class="btn btn-primary">Send a new link</button>
+          <p class="footnote">Still stuck? <a href="#">Contact support</a></p>
+        </div>
+
+        <div data-when="success">
+          <div style="font-size:40px;margin-bottom:10px">✅</div>
+          <h3>Email verified</h3>
+          <p class="lede">Your account is confirmed. Next we’ll set your timezone — it decides how your trades are grouped into sessions.</p>
+          <button class="btn btn-primary">Continue to setup</button>
+        </div>
+      </div></div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Rules</h5>
+      <ul>
+        <li><span class="k">Token life 24 h</span>, single use, invalidated once consumed or superseded by a newer one.</li>
+        <li><span class="k">Resend throttle</span> — 60 s cooldown, max 5 per address per day.</li>
+        <li><span class="k">Changing email here</span> re-issues verification and updates the pending address only; the old one stays active until the new is confirmed.</li>
+        <li>Google-origin accounts skip this screen entirely — the provider has already verified the address.</li>
+      </ul>
+      <h5>States</h5>
+      <ul>
+        <li><span class="k">Expired</span> is a dead end without a fix, so the primary action is a new link, not a retry of the old one.</li>
+        <li><span class="k">Verified</span> hands off directly to S06 rather than dropping the user on a dashboard they haven’t configured.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-03</span><span class="chip">throttled</span><span class="chip">single-use token</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S05 ================= -->
+  <section class="card" id="M1-S05" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M1-S05</span><h2>Reset password</h2></div>
+      <p class="purpose">Two-step recovery: request a link, then set a new password. The confirmation is deliberately identical whether or not the account exists.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="default" aria-pressed="true">Request</button>
+        <button data-set="sent" aria-pressed="false">Sent</button>
+        <button data-set="reset" aria-pressed="false">Set new</button>
+        <button data-set="expired" aria-pressed="false">Invalid link</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr"><div class="scr-narrow">
+        <div class="logo"><span class="mark">TJ</span><b>Trading Journal</b></div>
+
+        <div data-when="default">
+          <h3>Reset your password</h3>
+          <p class="lede">Enter your email and we’ll send you a reset link.</p>
+          <div class="field"><label>Email</label><input class="input" type="email" placeholder="you@example.com"></div>
+          <button class="btn btn-primary">Send reset link</button>
+          <p class="footnote"><a href="#">Back to sign in</a></p>
+        </div>
+
+        <div data-when="sent" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:10px">📨</div>
+          <h3>Check your email</h3>
+          <p class="lede">If an account exists for that address, a reset link is on its way. It expires in 60 minutes.</p>
+          <button class="btn btn-ghost">Back to sign in</button>
+        </div>
+
+        <div data-when="reset">
+          <h3>Set a new password</h3>
+          <p class="lede">Signing in everywhere else will be cancelled once you save.</p>
+          <div class="field"><label>New password</label>
+            <div class="input-wrap"><input class="input" type="password" value="············"><button class="ghost">Show</button></div>
+            <div class="strength"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+            <div class="hint">Strong — at least 10 characters.</div>
+          </div>
+          <div class="field"><label>Confirm new password</label>
+            <input class="input" type="password" value="············"></div>
+          <button class="btn btn-primary">Save and sign in</button>
+        </div>
+
+        <div data-when="expired" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:10px">⌛</div>
+          <h3>This link is no longer valid</h3>
+          <p class="lede">Reset links last 60 minutes and can be used once. Request a new one to continue.</p>
+          <button class="btn btn-primary">Request a new link</button>
+        </div>
+      </div></div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Rules</h5>
+      <ul>
+        <li><span class="k">Identical confirmation</span> for known and unknown addresses — the “if an account exists” wording is the anti-enumeration control.</li>
+        <li><span class="k">Token life 60 min</span>, single use, invalidated when used or when a newer one is issued.</li>
+        <li><span class="k">All sessions revoked</span> on successful reset — the standard containment step if the account was compromised.</li>
+        <li>A confirmation email is sent after the change, so an unauthorised reset is visible to the real owner.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-05</span><span class="chip">no enumeration</span><span class="chip">revokes sessions</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S06 ================= -->
+  <section class="card" id="M1-S06" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M1-S06</span><h2>First-run setup</h2></div>
+      <p class="purpose">The highest-stakes screen in M1. Timezone set here decides how every future trade is bucketed into Asian, London, or New York sessions.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="default" aria-pressed="true">Default</button>
+        <button data-set="loading" aria-pressed="false">Saving</button>
+        <button data-set="error" aria-pressed="false">Error</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <div style="max-width:620px;margin:0 auto">
+          <h3>Set up your account</h3>
+          <p class="lede">Two quick things. You can change both later in settings.</p>
+
+          <div class="banner b-err" data-when="error">
+            <span>⚠️</span><span><b>Couldn’t save your settings</b>Check your connection and try again — nothing was lost.</span>
+          </div>
+
+          <div class="pane">
+            <h4>Your timezone</h4>
+            <p class="sub">This decides which trading session each trade belongs to. Get it right and your session stats are meaningful.</p>
+            <div class="tzpick">
+              <select class="input"><option>(GMT+05:30) Asia/Kolkata — detected</option><option>(GMT+00:00) Europe/London</option><option>(GMT−05:00) America/New_York</option><option>(GMT+04:00) Asia/Dubai</option></select>
+            </div>
+            <div class="banner b-info" style="margin:12px 0 0">
+              <span>🕑</span><span><b>Why this matters</b>At GMT+05:30, the London session opens at 12:30 pm your time. We label sessions in your local clock so the numbers match how you actually trade.</span>
+            </div>
+          </div>
+
+          <div class="pane">
+            <h4>Where do you trade?</h4>
+            <p class="sub">We’ll offer the right connection first. Skip if you’re not sure yet.</p>
+            <div class="grid2">
+              <button class="btn btn-ghost" style="justify-content:flex-start">MetaTrader 5</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start">cTrader</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start">A prop firm account</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start">Something else</button>
+            </div>
+          </div>
+
+          <div class="pane">
+            <h4>Display currency</h4>
+            <p class="sub">Used for totals across accounts.</p>
+            <select class="input" style="max-width:220px"><option>USD — US Dollar</option><option>EUR — Euro</option><option>INR — Indian Rupee</option><option>GBP — Pound Sterling</option></select>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-primary" data-when="default error">Save and continue</button>
+            <button class="btn btn-primary" data-when="loading" disabled><span class="spinner"></span> Saving…</button>
+            <button class="btn btn-ghost" style="max-width:130px">Skip for now</button>
+          </div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Why this screen carries weight</h5>
+      <ul>
+        <li><span class="k">Timezone is a hard dependency of M3</span> (session detection). A wrong value silently corrupts every session statistic downstream — so it is pre-filled from the browser and explained in plain language rather than left as a bare dropdown.</li>
+        <li><span class="k">Skippable, but never empty</span> — skipping stores the detected timezone rather than null, so M3 always has a usable value.</li>
+        <li><span class="k">Platform answer is a routing hint</span> for M2, not a commitment.</li>
+      </ul>
+      <h5>States</h5>
+      <ul>
+        <li>Error preserves all entered values; the form is never cleared on failure.</li>
+        <li>Completion sets <span class="mono">onboarding_completed_at</span> and emits <span class="mono">user.onboarded</span>.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-07</span><span class="chip">feeds M3</span><span class="chip">hints M2</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S07 ================= -->
+  <section class="card" id="M1-S07" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M1-S07</span><h2>Profile &amp; account</h2></div>
+      <p class="purpose">Everyday settings. Changing an email is treated as a security event, not a simple field edit.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="default" aria-pressed="true">Default</button>
+        <button data-set="loading" aria-pressed="false">Saving</button>
+        <button data-set="success" aria-pressed="false">Saved</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <div style="max-width:620px;margin:0 auto">
+          <h3>Profile</h3>
+          <p class="lede">How your account is set up.</p>
+
+          <div class="banner b-ok" data-when="success"><span>✅</span><span><b>Changes saved</b>Your profile is up to date.</span></div>
+
+          <div class="pane">
+            <div class="row" style="padding-top:0">
+              <div style="display:flex;gap:12px;align-items:center">
+                <div style="width:46px;height:46px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:700">RS</div>
+                <div><div class="l">Raj Sharma</div><div class="d">Member since March 2026</div></div>
+              </div>
+              <button class="btn btn-ghost btn-sm">Change photo</button>
+            </div>
+          </div>
+
+          <div class="pane">
+            <h4>Details</h4>
+            <div class="field"><label>Display name</label><input class="input" value="Raj Sharma"></div>
+            <div class="field"><label>Email</label>
+              <div class="input-wrap"><input class="input" value="raj@example.com"><button class="ghost">Change</button></div>
+              <div class="hint">Changing this sends a confirmation link to the new address. Your current email stays active until it’s confirmed.</div>
+            </div>
+            <div class="field"><label>Timezone</label>
+              <select class="input"><option>(GMT+05:30) Asia/Kolkata</option><option>(GMT+00:00) Europe/London</option></select>
+              <div class="hint">Changing this re-labels the session on your existing trades.</div>
+            </div>
+            <div class="field" style="margin-bottom:0"><label>Display currency</label>
+              <select class="input" style="max-width:220px"><option>USD — US Dollar</option><option>INR — Indian Rupee</option></select>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-primary" style="max-width:170px" data-when="default success">Save changes</button>
+            <button class="btn btn-primary" style="max-width:170px" data-when="loading" disabled><span class="spinner"></span> Saving…</button>
+            <button class="btn btn-ghost" style="max-width:110px">Cancel</button>
+          </div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Rules</h5>
+      <ul>
+        <li><span class="k">Email change is double-confirmed</span> — new address must be verified, and a notice goes to the old address so a hijack is visible.</li>
+        <li><span class="k">Timezone change triggers recalculation</span> of session labels in M3; the hint says so plainly rather than surprising the user later.</li>
+        <li><span class="k">Display currency is presentation only</span> — stored trade values are never rewritten.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-08</span><span class="chip">emits user.updated</span><span class="chip">audit-logged</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S08 ================= -->
+  <section class="card" id="M1-S08" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M1-S08</span><h2>Security</h2></div>
+      <p class="purpose">Password, active sessions, and two-factor. Gives the user the tools to shut down a compromise themselves.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="default" aria-pressed="true">Default</button>
+        <button data-set="empty" aria-pressed="false">Single session</button>
+        <button data-set="loading" aria-pressed="false">Revoking</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <div style="max-width:620px;margin:0 auto">
+          <h3>Security</h3>
+          <p class="lede">Control access to your account.</p>
+
+          <div class="pane">
+            <h4>Password</h4>
+            <p class="sub">Last changed 2 months ago.</p>
+            <button class="btn btn-ghost btn-sm">Change password</button>
+          </div>
+
+          <div class="pane">
+            <div class="row" style="padding-top:0;border:0">
+              <div><h4>Two-factor authentication</h4><p class="sub" style="margin:0">An extra code at sign-in, from an authenticator app.</p></div>
+              <span class="badge bg-off">Not enabled</span>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="margin-top:12px">Set up two-factor</button>
+          </div>
+
+          <div class="pane">
+            <h4>Where you’re signed in</h4>
+            <p class="sub">Revoke anything you don’t recognise.</p>
+
+            <div class="sess">
+              <div><div class="l">Chrome · Windows <span class="badge bg-ok" style="margin-left:6px">This device</span></div>
+                <div class="meta">Bengaluru, India · active now</div></div>
+            </div>
+
+            <div data-when="default loading">
+              <div class="sess">
+                <div><div class="l">Safari · iPhone</div><div class="meta">Bengaluru, India · 3 hours ago</div></div>
+                <button class="btn btn-ghost btn-sm" data-when="default">Revoke</button>
+                <button class="btn btn-ghost btn-sm" data-when="loading" disabled>Revoking…</button>
+              </div>
+              <div class="sess">
+                <div><div class="l">Firefox · Windows</div><div class="meta">Frankfurt, Germany · 6 days ago</div></div>
+                <button class="btn btn-ghost btn-sm" data-when="default">Revoke</button>
+                <button class="btn btn-ghost btn-sm" data-when="loading" disabled>Revoking…</button>
+              </div>
+              <button class="btn btn-ghost" style="margin-top:14px">Sign out everywhere else</button>
+            </div>
+
+            <div data-when="empty">
+              <div class="empty"><div class="ico">🔒</div>
+                <div style="font-size:13.5px">No other active sessions.</div>
+                <div style="font-size:12.5px;color:var(--faint);margin-top:3px">You’re only signed in on this device.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Session list</span> — device, approximate location from IP, last-active time. Current device is always pinned and cannot be revoked from here.</li>
+        <li><span class="k">“Sign out everywhere else”</span> — one action to contain a suspected compromise.</li>
+        <li><span class="k">2FA is scaffolded in v1</span> — the surface exists so it can ship without redesign.</li>
+      </ul>
+      <h5>States</h5>
+      <ul>
+        <li><span class="k">Single session</span> is the common case and gets a real empty state, not a blank panel.</li>
+        <li>Revoking is optimistic in the UI but confirmed server-side; failure restores the row and explains why.</li>
+        <li>Approximate location is labelled “approximate” in tooltip copy — IP geolocation is frequently wrong and must not be presented as fact.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-09</span><span class="chip mono">US-10</span><span class="chip">audit-logged</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S09 ================= -->
+  <section class="card" id="M1-S09" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M1-S09</span><h2>Privacy &amp; data</h2></div>
+      <p class="purpose">Where GDPR and CCPA rights become buttons: consent control, data export, and the route to deletion.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="default" aria-pressed="true">Default</button>
+        <button data-set="loading" aria-pressed="false">Preparing export</button>
+        <button data-set="ready" aria-pressed="false">Export ready</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <div style="max-width:620px;margin:0 auto">
+          <h3>Privacy &amp; data</h3>
+          <p class="lede">What we hold, and what you can do with it.</p>
+
+          <div class="pane">
+            <h4>Communication</h4>
+            <p class="sub">Turn any of these off without affecting your account.</p>
+            <div class="row"><div><div class="l">Day-end coaching summary</div><div class="d">Your AI review, sent after your last session closes</div></div>
+              <button class="toggle" aria-pressed="true" aria-label="Day-end coaching summary"></button></div>
+            <div class="row"><div><div class="l">Weekly performance digest</div><div class="d">A summary of your week</div></div>
+              <button class="toggle" aria-pressed="true" aria-label="Weekly digest"></button></div>
+            <div class="row"><div><div class="l">Product updates</div><div class="d">New features and improvements</div></div>
+              <button class="toggle" aria-pressed="false" aria-label="Product updates"></button></div>
+            <div class="row"><div><div class="l">Usage analytics</div><div class="d">Helps us find what’s broken. Never sold or shared.</div></div>
+              <button class="toggle" aria-pressed="true" aria-label="Usage analytics"></button></div>
+          </div>
+
+          <div class="pane">
+            <h4>Your data</h4>
+            <p class="sub">A machine-readable copy of everything tied to your account — profile, trades, plans, strategies and journal entries.</p>
+
+            <div data-when="default">
+              <button class="btn btn-ghost btn-sm">Request a copy</button>
+              <div class="hint">Ready within 30 days, usually within an hour. We’ll email you a download link.</div>
+            </div>
+            <div data-when="loading">
+              <div class="banner b-info" style="margin:0"><span>⏳</span><span><b>Preparing your export</b>Requested today at 14:02. We’ll email you when it’s ready.</span></div>
+            </div>
+            <div data-when="ready">
+              <div class="banner b-ok" style="margin:0 0 12px"><span>✅</span><span><b>Your export is ready</b>Available until 30 July 2026, then removed automatically.</span></div>
+              <div class="btn-row"><button class="btn btn-primary btn-sm">Download (.zip)</button><button class="btn btn-ghost btn-sm">Request a fresh copy</button></div>
+              <div class="codebox mono" style="margin-top:12px">export_2026-07-23.zip · JSON + CSV · 4.2 MB</div>
+            </div>
+          </div>
+
+          <div class="pane" style="margin-bottom:0">
+            <h4>Legal</h4>
+            <div class="row"><div class="l">Privacy Policy</div><a href="#" style="font-size:13px">Read</a></div>
+            <div class="row"><div class="l">Terms of Service</div><a href="#" style="font-size:13px">Read</a></div>
+            <div class="row"><div class="l">Risk disclaimer</div><a href="#" style="font-size:13px">Read</a></div>
+            <div class="row"><div><div class="l" style="color:var(--loss)">Delete my account</div><div class="d">Permanently removes your data after a 30-day grace period</div></div>
+              <button class="btn btn-ghost btn-sm" style="color:var(--loss);border-color:#ecc9c0">Continue</button></div>
+          </div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Regulatory mapping</h5>
+      <ul>
+        <li><span class="k">Granular consent toggles</span> — GDPR Art. 7(3): withdrawing consent must be as easy as giving it. Each purpose is separate.</li>
+        <li><span class="k">Request a copy</span> satisfies GDPR Art. 15/20 (access &amp; portability) and CCPA “right to know”. Machine-readable JSON + CSV.</li>
+        <li><span class="k">“Never sold or shared”</span> stated in plain sight — supports the CCPA/CPRA position that no opt-out of sale is required.</li>
+        <li><span class="k">Deletion entry point</span> lives here, next to the policies, so rights are discoverable in one place.</li>
+      </ul>
+      <h5>States</h5>
+      <ul>
+        <li>Export links are time-limited and expire automatically — a stale export is a standing data-breach risk.</li>
+        <li>Toggle changes write a timestamped <span class="mono">ConsentRecord</span>; consent history is retained as evidence.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-11</span><span class="chip mono">US-13</span><span class="chip">GDPR Art. 7/15/20</span><span class="chip">CCPA</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S10 ================= -->
+  <section class="card" id="M1-S10" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M1-S10</span><h2>Delete account</h2></div>
+      <p class="purpose">Deliberately high-friction. A 30-day grace period makes deletion recoverable while still honouring the right to erasure.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="default" aria-pressed="true">Confirm</button>
+        <button data-set="armed" aria-pressed="false">Armed</button>
+        <button data-set="scheduled" aria-pressed="false">Scheduled</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <div style="max-width:560px;margin:0 auto">
+
+          <div data-when="default armed">
+            <h3>Delete your account</h3>
+            <p class="lede">This removes your account and everything in it.</p>
+
+            <div class="banner b-warn"><span>⚠️</span><span><b>What gets deleted</b>
+              Your profile, all imported trades, plans, strategies, journal entries, checklists and AI reviews. Broker connections are revoked immediately.</span></div>
+
+            <div class="pane">
+              <h4>Before you go</h4>
+              <p class="sub">You may want a copy of your trading history first — it can’t be recovered afterwards.</p>
+              <button class="btn btn-ghost btn-sm">Download my data</button>
+            </div>
+
+            <div class="pane">
+              <h4>30-day grace period</h4>
+              <p class="sub" style="margin:0">Your account is locked immediately and permanently erased after 30 days. Sign in during that window to cancel. After that it cannot be undone.</p>
+            </div>
+
+            <div class="field"><label>Type DELETE to confirm</label>
+              <input class="input" placeholder="DELETE" data-when="default">
+              <input class="input" value="DELETE" data-when="armed">
+            </div>
+
+            <div class="btn-row">
+              <button class="btn btn-danger" data-when="armed">Delete my account</button>
+              <button class="btn btn-danger" data-when="default" disabled>Delete my account</button>
+              <button class="btn btn-ghost" style="max-width:110px">Cancel</button>
+            </div>
+          </div>
+
+          <div data-when="scheduled" style="text-align:center">
+            <div style="font-size:40px;margin-bottom:10px">🗓️</div>
+            <h3>Deletion scheduled</h3>
+            <p class="lede">Your account will be permanently erased on <b style="color:var(--text)">22 August 2026</b>. Until then you can undo this at any time.</p>
+            <div class="banner b-warn" style="text-align:left"><span>🔌</span><span><b>Broker connections revoked</b>Trade syncing has stopped. Reconnecting requires cancelling the deletion first.</span></div>
+            <button class="btn btn-primary">Cancel deletion and restore my account</button>
+            <p class="footnote">A confirmation has been emailed to raj@example.com.</p>
+          </div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Why the friction is intentional</h5>
+      <ul>
+        <li><span class="k">Type-to-confirm</span> prevents an accidental irreversible action; the destructive button stays disabled until the word matches exactly.</li>
+        <li><span class="k">Export offered inline</span> — the user is most likely to want their data at exactly this moment.</li>
+        <li><span class="k">Immediate broker revocation</span> — credentials for a departing user are a liability, so they are cut at request time, not after the grace period.</li>
+        <li><span class="k">30-day grace</span> balances GDPR erasure (“without undue delay”) against protecting users from mistakes and rage-quits.</li>
+      </ul>
+      <h5>What survives deletion</h5>
+      <ul>
+        <li>Financial and tax records required by law are retained in a separate ledger, unlinked from the deleted identity.</li>
+        <li>Anonymised, non-identifying aggregates may remain — this is stated in the privacy policy rather than hidden.</li>
+        <li>Backups age out on their own cycle; the retention schedule in the spec sets the maximum window.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-12</span><span class="chip">GDPR Art. 17</span><span class="chip">CCPA delete</span><span class="chip">reversible 30d</span></div>
+    </div>
+  </section>
+
+  </main>
+</div>
+
+<script>
+// Show only the elements that belong to the card's current state.
+// Done in script (not CSS) so each element keeps its own display type — flex buttons stay flex.
+function applyState(card){
+  const state = card.dataset.state;
+  card.querySelectorAll('[data-when]').forEach(el=>{
+    const owner = el.closest('.card');
+    if(owner !== card) return;              // don't touch nested cards
+    const list = el.dataset.when.trim().split(/\s+/);
+    el.style.display = list.includes(state) ? '' : 'none';
+  });
+}
+
+document.querySelectorAll('.card').forEach(card=>{
+  applyState(card);
+  // state tabs
+  const stateWrap = card.querySelector('[data-role="states"]');
+  if(stateWrap){
+    stateWrap.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        stateWrap.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false'));
+        btn.setAttribute('aria-pressed','true');
+        card.dataset.state = btn.dataset.set;
+        applyState(card);
+      });
+    });
+  }
+  // viewport toggle
+  const vpWrap = card.querySelector('[data-role="vp"]');
+  const stage  = card.querySelector('.stage');
+  if(vpWrap && stage){
+    vpWrap.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        vpWrap.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false'));
+        btn.setAttribute('aria-pressed','true');
+        stage.dataset.vp = btn.dataset.vp;
+      });
+    });
+  }
+});
+// demo-only: password show/hide + toggles, so the mockup feels alive
+document.querySelectorAll('.ghost').forEach(g=>{
+  g.addEventListener('click',()=>{
+    const i=g.parentElement.querySelector('input');
+    if(!i) return;
+    if(g.textContent.trim()==='Show'){i.type='text';g.textContent='Hide';}
+    else if(g.textContent.trim()==='Hide'){i.type='password';g.textContent='Show';}
+  });
+});
+document.querySelectorAll('.toggle').forEach(t=>{
+  t.addEventListener('click',()=>t.setAttribute('aria-pressed', t.getAttribute('aria-pressed')==='true'?'false':'true'));
+});
+</script>
+</body>
+</html>

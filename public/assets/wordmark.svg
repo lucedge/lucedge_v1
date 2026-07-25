@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 32" fill="none">
+  <defs>
+    <linearGradient id="le-wm" x1="6" y1="28" x2="26" y2="6" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#002A78"></stop>
+      <stop offset="35%" stop-color="#0064DC"></stop>
+      <stop offset="55%" stop-color="#5BB5FF"></stop>
+      <stop offset="100%" stop-color="#0064DC"></stop>
+    </linearGradient>
+    <linearGradient id="le-wm-bar" x1="0" y1="6" x2="0" y2="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#9DCBFF"></stop>
+      <stop offset="100%" stop-color="#3D7FD9"></stop>
+    </linearGradient>
+  </defs>
+  <path d="M27 4 L7 28" stroke="url(#le-wm)" stroke-width="2.4" stroke-linecap="round"></path>
+  <path d="M14 9.5 L23 9.5" stroke="url(#le-wm-bar)" stroke-width="2.6" stroke-linecap="round"></path>
+  <path d="M14 16 L22 16" stroke="url(#le-wm-bar)" stroke-width="2.6" stroke-linecap="round"></path>
+  <path d="M14 22.5 L21 22.5" stroke="url(#le-wm-bar)" stroke-width="2.6" stroke-linecap="round"></path>
+  <text x="40" y="22" font-family="Geist, system-ui, sans-serif" font-size="19" font-weight="600" fill="#FFFFFF" letter-spacing="-0.3">
+    Luce<tspan font-weight="500" fill="#008BF3">Edge</tspan>
+  </text>
+</svg>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M8 — Notifications &amp; Alerts · UI Screen Mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0D1B2A; --navy:#1F3A5F; --paper:#F4F6F9; --surface:#fff;
+  --line:#DCE3EA; --line-soft:#EDF1F5;
+  --text:#16202B; --muted:#5D6B7A; --faint:#8C99A6;
+  --action:#1E6FA8; --action-dark:#175A88; --action-soft:#E8F1F8;
+  --profit:#0F6E56; --profit-soft:#E4F4EE;
+  --loss:#A8341A; --loss-soft:#FBEBE6;
+  --warn:#8A6A00; --warn-soft:#FBF3DC;
+  --r:10px; --rs:7px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:15px;line-height:1.55;}
+.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+h1,h2,h3,h4{margin:0;line-height:1.25;font-weight:600}
+a{color:var(--action)}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--action);outline-offset:2px;border-radius:4px}
+
+.topbar{position:sticky;top:0;z-index:50;background:var(--ink);color:#fff;
+  padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  border-bottom:1px solid #0a1420}
+.topbar .brand{font-weight:700;letter-spacing:-.01em;font-size:16px}
+.topbar .tag{font-size:11px;padding:3px 7px;border-radius:5px;background:#1E3549;color:#9FC4E0;letter-spacing:.06em}
+.topbar .sub{color:#93A7B8;font-size:13px;flex:1;min-width:180px}
+.topbar .legend{display:flex;gap:12px;font-size:11.5px;color:#93A7B8;flex-wrap:wrap}
+.topbar .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+
+.shell{display:flex;align-items:flex-start;gap:24px;max-width:1500px;margin:0 auto;padding:24px 20px 80px}
+.rail{position:sticky;top:74px;width:238px;flex:0 0 238px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);padding:10px;max-height:calc(100vh - 100px);overflow:auto}
+.rail h4{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);
+  padding:6px 8px 8px}
+.rail a{display:flex;gap:9px;align-items:baseline;padding:7px 9px;border-radius:var(--rs);
+  text-decoration:none;color:var(--text);font-size:13.5px}
+.rail a:hover{background:var(--paper)}
+.rail a .n{font-size:10.5px;color:var(--faint);letter-spacing:.02em}
+main{flex:1;min-width:0;display:flex;flex-direction:column;gap:22px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.card-head{padding:16px 18px 14px;border-bottom:1px solid var(--line-soft)}
+.card-head .idline{display:flex;align-items:center;gap:10px;margin-bottom:5px;flex-wrap:wrap}
+.card-head .sid{font-size:11px;font-weight:700;color:var(--action);background:var(--action-soft);
+  padding:2px 7px;border-radius:5px;letter-spacing:.04em}
+.card-head h2{font-size:16.5px}
+.card-head .purpose{margin:0;color:var(--muted);font-size:13.5px;max-width:70ch}
+.card-tools{display:flex;gap:14px;justify-content:space-between;align-items:center;
+  padding:10px 18px;background:#FAFBFC;border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
+.seg{display:flex;gap:3px;background:#EBEFF3;padding:3px;border-radius:8px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;color:var(--muted);font-size:11.5px;font-weight:500;
+  padding:5px 10px;border-radius:6px;letter-spacing:.02em}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);
+  box-shadow:0 1px 2px rgba(13,27,42,.13);font-weight:600}
+.tool-lab{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-right:2px;align-self:center}
+
+.stage{padding:22px 18px;background:
+  linear-gradient(0deg,rgba(13,27,42,.025),rgba(13,27,42,.025)),var(--surface);
+  display:flex;justify-content:center}
+.frame{width:100%;max-width:980px;transition:max-width .18s ease}
+.stage[data-vp="mobile"] .frame{max-width:378px}
+.app{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;box-shadow:0 1px 3px rgba(13,27,42,.06)}
+
+.notes{border-top:1px solid var(--line-soft);padding:14px 18px 16px;background:#FBFCFD}
+.notes h5{margin:0 0 7px;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+.notes ul{margin:0 0 12px;padding-left:17px;color:var(--muted);font-size:13px}
+.notes ul:last-child{margin-bottom:0}
+.notes li{margin-bottom:3px}
+.notes .k{color:var(--text);font-weight:600}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:11px;padding:3px 8px;border-radius:20px;background:var(--paper);
+  border:1px solid var(--line);color:var(--muted)}
+
+.scr{padding:26px 24px}
+.scr h3{font-size:20px;letter-spacing:-.015em;margin-bottom:5px}
+.scr .lede{color:var(--muted);font-size:13.5px;margin:0 0 20px}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px}
+.input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:var(--rs);
+  background:var(--surface);font-size:14px;color:var(--text)}
+.input::placeholder{color:var(--faint)}
+.input:focus{outline:none;border-color:var(--action);box-shadow:0 0 0 3px rgba(30,111,168,.13)}
+.hint{font-size:11.5px;color:var(--faint);margin-top:5px}
+
+.btn{width:100%;padding:11px 14px;border-radius:var(--rs);border:1px solid transparent;
+  font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:var(--action);color:#fff}
+.btn-primary:hover{background:var(--action-dark)}
+.btn-ghost{background:var(--surface);border-color:var(--line);color:var(--text)}
+.btn-ghost:hover{background:var(--paper)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn-row{display:flex;gap:10px}
+.btn-sm{width:auto;padding:7px 12px;font-size:12.5px}
+
+.banner{display:flex;gap:10px;padding:11px 13px;border-radius:var(--rs);font-size:13px;
+  margin-bottom:16px;align-items:flex-start;line-height:1.45}
+.banner b{display:block;margin-bottom:1px}
+.b-err{background:var(--loss-soft);color:#7d2612;border:1px solid #f0cdc2}
+.b-ok{background:var(--profit-soft);color:#0a5442;border:1px solid #bfe3d7}
+.b-warn{background:var(--warn-soft);color:#6B5200;border:1px solid #ecd9a4}
+.b-info{background:var(--action-soft);color:#155580;border:1px solid #c9e0f0}
+
+.pane{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 17px;margin-bottom:14px}
+.pane h4{font-size:14px;margin-bottom:3px}
+.pane .sub{color:var(--muted);font-size:12.5px;margin:0 0 13px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.row:last-child{border-bottom:0;padding-bottom:0}
+.row .l{font-size:13.5px;font-weight:500}
+.row .d{font-size:12px;color:var(--faint);margin-top:1px}
+.badge{font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:5px;letter-spacing:.03em}
+.bg-ok{background:var(--profit-soft);color:var(--profit)}
+.bg-warn{background:var(--warn-soft);color:var(--warn)}
+.bg-err{background:var(--loss-soft);color:var(--loss)}
+.bg-off{background:var(--paper);color:var(--muted);border:1px solid var(--line)}
+
+.empty{text-align:center;padding:34px 10px;color:var(--muted)}
+.empty .ico{width:42px;height:42px;border-radius:11px;background:var(--paper);border:1px solid var(--line);
+  display:grid;place-items:center;margin:0 auto 12px;font-size:19px}
+
+/* chip-select (single or multi toggle) */
+.chipsel{display:flex;flex-wrap:wrap;gap:8px}
+.chipsel button{padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--surface);
+  font-size:12.5px;color:var(--muted);font-weight:500}
+.chipsel button.on{background:var(--action-soft);border-color:var(--action);color:var(--action-dark);font-weight:700}
+.chipsel button[disabled]{opacity:.5;cursor:not-allowed}
+
+/* toggle switch */
+.toggle{position:relative;width:36px;height:20px;background:#E3E8ED;border-radius:14px;display:inline-block;flex:0 0 auto}
+.toggle.on{background:var(--action)}
+.toggle .knob{position:absolute;top:2.5px;left:2.5px;width:15px;height:15px;border-radius:50%;background:#fff}
+.toggle.on .knob{left:18.5px}
+.togglerow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+/* kind tags (reused for notification category) */
+.kind-tag{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:5px;letter-spacing:.03em}
+.kind-risk{background:var(--loss-soft);color:var(--loss)}
+.kind-pattern{background:var(--action-soft);color:var(--action-dark)}
+.kind-improve{background:var(--profit-soft);color:var(--profit)}
+.kind-system{background:var(--paper);color:var(--muted);border:1px solid var(--line)}
+
+/* ---- M8-specific: notification inbox ---- */
+.notif-row{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line-soft)}
+.notif-row:last-child{border-bottom:0}
+.unread-dot{width:8px;height:8px;border-radius:50%;background:var(--action);margin-top:7px;flex:0 0 auto}
+.unread-dot.read{background:transparent}
+.notif-row .content{flex:1;min-width:0}
+.notif-row .toprow{display:flex;gap:8px;align-items:center;margin-bottom:4px;flex-wrap:wrap}
+.notif-row .title{font-size:13.5px;font-weight:600}
+.notif-row .meta{font-size:11.5px;color:var(--faint)}
+
+/* ---- M8-specific: preferences ---- */
+.pref-row{border:1px solid var(--line);border-radius:var(--r);padding:14px 15px;margin-bottom:11px;background:var(--surface)}
+.pref-head{display:flex;align-items:center;gap:10px;margin-bottom:11px;flex-wrap:wrap}
+.pref-note{font-size:11.5px;color:var(--faint)}
+.chrow{display:flex;gap:20px;margin-bottom:11px;flex-wrap:wrap}
+.chrow label{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.pref-row .sub-label{font-size:11.5px;font-weight:600;color:var(--muted);margin-bottom:6px}
+
+/* ---- M8-specific: device management ---- */
+.device-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.device-row:last-child{border-bottom:0}
+.device-row .name{font-size:13.5px;font-weight:600}
+.device-row .meta{font-size:11.5px;color:var(--faint);margin-top:2px}
+
+/* ---- M8-specific: snooze / muted list ---- */
+.muted-row{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:10px 0;border-bottom:1px solid var(--line-soft)}
+.muted-row:last-child{border-bottom:0}
+.muted-row .l{font-size:13px;font-weight:500}
+.muted-row .d{font-size:11.5px;color:var(--faint);margin-top:1px}
+
+/* responsive */
+@media(max-width:960px){
+  .shell{flex-direction:column;padding:16px 14px 60px;gap:14px}
+  .rail{position:static;width:100%;flex:none;max-height:none;display:flex;gap:6px;overflow-x:auto;padding:8px}
+  .rail h4{display:none}
+  .rail a{white-space:nowrap;background:var(--paper);border:1px solid var(--line)}
+  .stage{padding:16px 12px}
+  .card-tools{gap:10px}
+  .chrow{gap:14px}
+}
+@media(max-width:520px){
+  .scr{padding:20px 16px}
+  .topbar .legend{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="brand">Trading Journal</span>
+  <span class="tag mono">M8</span>
+  <span class="sub">Notifications &amp; Alerts — UI screen mockups · v1.0</span>
+  <span class="legend">
+    <span><i style="background:#1E6FA8"></i>insight</span>
+    <span><i style="background:#0F6E56"></i>review</span>
+    <span><i style="background:#A8341A"></i>risk alert</span>
+  </span>
+</header>
+
+<div class="shell">
+  <nav class="rail" aria-label="Screen index">
+    <h4>Screens</h4>
+    <a href="#M8-S01"><span class="n mono">S01</span> Notification inbox</a>
+    <a href="#M8-S02"><span class="n mono">S02</span> Notification preferences</a>
+    <a href="#M8-S03"><span class="n mono">S03</span> Push &amp; device management</a>
+    <a href="#M8-S04"><span class="n mono">S04</span> Digest preview</a>
+    <a href="#M8-S05"><span class="n mono">S05</span> Quiet hours &amp; snooze</a>
+  </nav>
+
+  <main>
+
+  <!-- ================= S01 ================= -->
+  <section class="card" id="M8-S01" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M8-S01</span><h2>Notification inbox</h2></div>
+      <p class="purpose">Every notification the app has sent, across every channel, in one place — including one that had no enabled channel to go out on (Section 4.1).</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="empty" aria-pressed="false">Empty</button>
+        <button data-set="default" aria-pressed="true">Has notifications</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <h3>Notifications</h3>
+        <p class="lede">Newest first</p>
+
+        <div data-when="empty">
+          <div class="empty">
+            <div class="ico">🔔</div>
+            <div style="font-size:13.5px;font-weight:600;color:var(--text)">Nothing yet</div>
+            <div style="font-size:12.5px;color:var(--faint);margin-top:3px">Notifications from your coach and risk alerts will show up here.</div>
+          </div>
+        </div>
+
+        <div data-when="default">
+          <div class="notif-row">
+            <div class="unread-dot"></div>
+            <div class="content">
+              <div class="toprow"><span class="kind-tag kind-risk">Risk alert</span></div>
+              <div class="title">Checklist adherence on Scaled ES opening range dropped below 70%</div>
+              <div class="meta">2h ago · push + in-app</div>
+            </div>
+          </div>
+          <div class="notif-row">
+            <div class="unread-dot read"></div>
+            <div class="content">
+              <div class="toprow"><span class="kind-tag kind-pattern">Insight</span></div>
+              <div class="title">You size up after a loss</div>
+              <div class="meta">1d ago · in-app only (daily digest)</div>
+            </div>
+          </div>
+          <div class="notif-row">
+            <div class="unread-dot read"></div>
+            <div class="content">
+              <div class="toprow"><span class="kind-tag kind-improve">Review</span></div>
+              <div class="title">Your weekly review is ready</div>
+              <div class="meta">3d ago · email + in-app</div>
+            </div>
+          </div>
+          <div class="notif-row">
+            <div class="unread-dot"></div>
+            <div class="content">
+              <div class="toprow"><span class="kind-tag kind-system">System</span></div>
+              <div class="title">A device was removed after you revoked it in settings</div>
+              <div class="meta">5d ago · in-app only</div>
+            </div>
+          </div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Notification row</span> — category tag, title, and a channel summary showing exactly how it was (or will be) delivered; tapping it opens the underlying Insight, ReviewSummary, or rule check.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>A notification with no enabled channel for its category is still recorded and visible here — it is never silently dropped just because delivery was off (US-12).</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-01</span><span class="chip mono">US-02</span><span class="chip">reads M7 + M4 events, writes Notification.read_at</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S02 ================= -->
+  <section class="card" id="M8-S02" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M8-S02</span><h2>Notification preferences</h2></div>
+      <p class="purpose">Which categories reach you, on which channel, and how often — except risk alerts, which stay immediate on at least one channel no matter what (Section 4.1).</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="default" aria-pressed="true">Default</button>
+        <button data-set="saved" aria-pressed="false">Saved</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <h3>Preferences</h3>
+        <p class="lede">Set independently per category.</p>
+
+        <div data-when="saved" class="banner b-ok"><span>✅</span><span><b>Preferences saved</b>Applies to the next notification in each category.</span></div>
+
+        <div class="pref-row">
+          <div class="pref-head"><span class="kind-tag kind-risk">Risk alert</span><span class="pref-note">Always immediate — can't be digested or fully disabled (Section 4.1)</span></div>
+          <div class="chrow">
+            <label><span class="toggle on" data-standalone-toggle></span> Push</label>
+            <label><span class="toggle on" data-standalone-toggle></span> Email</label>
+            <label><span class="toggle on" data-standalone-toggle></span> In-app</label>
+          </div>
+        </div>
+
+        <div class="pref-row">
+          <div class="pref-head"><span class="kind-tag kind-pattern">Insight</span></div>
+          <div class="chrow">
+            <label><span class="toggle" data-standalone-toggle></span> Push</label>
+            <label><span class="toggle" data-standalone-toggle></span> Email</label>
+            <label><span class="toggle on" data-standalone-toggle></span> In-app</label>
+          </div>
+          <div class="sub-label">Cadence</div>
+          <div class="chipsel"><button>Immediate</button><button class="on">Daily digest</button><button>Weekly digest</button></div>
+        </div>
+
+        <div class="pref-row">
+          <div class="pref-head"><span class="kind-tag kind-improve">Review</span></div>
+          <div class="chrow">
+            <label><span class="toggle on" data-standalone-toggle></span> Push</label>
+            <label><span class="toggle on" data-standalone-toggle></span> Email</label>
+            <label><span class="toggle on" data-standalone-toggle></span> In-app</label>
+          </div>
+          <div class="sub-label">Cadence</div>
+          <div class="chipsel"><button class="on">Immediate</button><button>Daily digest</button><button>Weekly digest</button></div>
+        </div>
+
+        <button class="btn btn-primary">Save preferences</button>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Per-category block</span> — three channel toggles and, for digestible categories, a cadence selector; risk alert's controls are visibly locked to communicate the override rather than silently ignoring a change.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>Risk alert cadence can never be set to a digest-only option, and at least one channel must stay enabled for it (PRF-001).</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-03</span><span class="chip mono">US-04</span><span class="chip mono">US-05</span><span class="chip">writes NotificationPreference</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S03 ================= -->
+  <section class="card" id="M8-S03" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M8-S03</span><h2>Push &amp; device management</h2></div>
+      <p class="purpose">Every device currently registered for push, and a way to revoke one immediately (Figure 8.3).</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="empty" aria-pressed="false">No devices</button>
+        <button data-set="default" aria-pressed="true">Has devices</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <h3>Devices</h3>
+        <p class="lede">Registered for push notifications.</p>
+
+        <div data-when="empty">
+          <div class="empty">
+            <div class="ico">📱</div>
+            <div style="font-size:13.5px;font-weight:600;color:var(--text)">No devices registered</div>
+            <div style="font-size:12.5px;color:var(--faint);margin-top:3px">Enable push notifications from your phone or browser to see it here.</div>
+          </div>
+        </div>
+
+        <div data-when="default">
+          <div class="pane">
+            <div class="device-row"><div><div class="name">iPhone 15 · iOS</div><div class="meta">last seen 2h ago</div></div><button class="btn btn-ghost btn-sm">Remove</button></div>
+            <div class="device-row"><div><div class="name">Chrome · Web</div><div class="meta">last seen 3d ago</div></div><button class="btn btn-ghost btn-sm">Remove</button></div>
+            <div class="device-row"><div><div class="name">Pixel 8 · Android</div><div class="meta">last seen 30d ago</div></div><button class="btn btn-ghost btn-sm">Remove</button></div>
+          </div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Device row</span> — platform, last-seen date, and a Remove action; a stale last-seen date helps a trader spot a lost or replaced device worth revoking themselves.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>Removing a device revokes its DeviceToken immediately — no further delivery attempt targets it, the same path an invalid-token failure triggers automatically (Figure 8.3).</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-07</span><span class="chip mono">US-08</span><span class="chip">writes DeviceToken</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S04 ================= -->
+  <section class="card" id="M8-S04" data-state="daily">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M8-S04</span><h2>Digest preview</h2></div>
+      <p class="purpose">What your next scheduled digest currently contains — a preview of the queue, not a guarantee of its final contents (Figure 8.2).</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">Cadence</span>
+        <button data-set="daily" aria-pressed="true">Daily</button>
+        <button data-set="weekly" aria-pressed="false">Weekly</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <div data-when="daily">
+          <h3>Next daily digest</h3>
+          <p class="lede">Sends tomorrow at 8:00 AM · 2 items queued so far</p>
+          <div class="pane">
+            <div class="notif-row"><div class="content"><div class="toprow"><span class="kind-tag kind-pattern">Insight</span></div><div class="title">You size up after a loss</div><div class="meta">queued 3h ago</div></div></div>
+            <div class="notif-row"><div class="content"><div class="toprow"><span class="kind-tag kind-pattern">Insight</span></div><div class="title">London session is your strongest</div><div class="meta">queued 1h ago</div></div></div>
+          </div>
+        </div>
+        <div data-when="weekly">
+          <h3>Next weekly digest</h3>
+          <p class="lede">Sends Sunday at 8:00 AM · 4 items queued so far</p>
+          <div class="pane">
+            <div class="notif-row"><div class="content"><div class="toprow"><span class="kind-tag kind-improve">Review</span></div><div class="title">Your weekly review is ready</div><div class="meta">queued 2d ago</div></div></div>
+            <div class="notif-row"><div class="content"><div class="toprow"><span class="kind-tag kind-pattern">Insight</span></div><div class="title">Checklist adherence is paying off</div><div class="meta">queued 4d ago</div></div></div>
+          </div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Queued item list</span> — the current contents of the trader's pending DigestBatch; more items can still arrive before the scheduled send time.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>Only insight and review category notifications ever queue into a digest — risk alerts are never batched (Section 4.1).</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-06</span><span class="chip">reads queued Notification rows</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S05 ================= -->
+  <section class="card" id="M8-S05" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M8-S05</span><h2>Quiet hours &amp; snooze</h2></div>
+      <p class="purpose">Hold non-urgent notifications overnight, or pause a whole category temporarily — risk alerts are exempt from both.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="default" aria-pressed="true">Default</button>
+        <button data-set="saved" aria-pressed="false">Saved</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <h3>Quiet hours &amp; snooze</h3>
+        <p class="lede">Changes apply from the next notification onward.</p>
+
+        <div data-when="saved" class="banner b-ok"><span>✅</span><span><b>Saved</b>Quiet hours and snooze settings updated.</span></div>
+
+        <div class="field">
+          <div class="togglerow"><label style="margin:0">Enable quiet hours</label>
+            <span class="toggle on" data-standalone-toggle><span class="knob"></span></span>
+          </div>
+        </div>
+        <div class="field"><label>Window</label>
+          <div class="btn-row">
+            <input class="input" value="10:00 PM">
+            <input class="input" value="7:00 AM">
+          </div>
+        </div>
+
+        <div class="banner b-info"><span>🔕</span><span>Risk alerts are never held by quiet hours, regardless of this window.</span></div>
+
+        <div class="pane">
+          <h4>Snoozed categories</h4>
+          <p class="sub">Every snooze has an end date — nothing is paused forever.</p>
+          <div class="muted-row">
+            <div><div class="l">Insight</div><div class="d">snoozed until Aug 5, 2026</div></div>
+            <button class="btn btn-ghost btn-sm">Unsnooze</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary">Save</button>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Snoozed categories list</span> — mirrors M7's pattern-mute concept (M7, Section 4.3) but scoped to a whole notification category instead of one pattern type.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>Risk alert notifications ignore both quiet hours and snooze — the one category this screen's controls can never touch (Section 4.1).</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-09</span><span class="chip mono">US-10</span><span class="chip">writes NotificationPreference + Snooze</span></div>
+    </div>
+  </section>
+
+  </main>
+</div>
+
+<script>
+function applyState(card){
+  const state = card.dataset.state;
+  card.querySelectorAll('[data-when]').forEach(el=>{
+    const owner = el.closest('.card');
+    if(owner !== card) return;
+    const list = el.dataset.when.trim().split(/\s+/);
+    el.style.display = list.includes(state) ? '' : 'none';
+  });
+}
+document.querySelectorAll('.card').forEach(card=>{
+  applyState(card);
+  const stateWrap = card.querySelector('[data-role="states"]');
+  if(stateWrap){
+    stateWrap.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        stateWrap.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false'));
+        btn.setAttribute('aria-pressed','true');
+        card.dataset.state = btn.dataset.set;
+        applyState(card);
+      });
+    });
+  }
+  const vpWrap = card.querySelector('[data-role="vp"]');
+  const stage  = card.querySelector('.stage');
+  if(vpWrap && stage){
+    vpWrap.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        vpWrap.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false'));
+        btn.setAttribute('aria-pressed','true');
+        stage.dataset.vp = btn.dataset.vp;
+      });
+    });
+  }
+});
+document.querySelectorAll('.chipsel').forEach(sel=>{
+  sel.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click',()=>{
+      if(b.hasAttribute('disabled')) return;
+      b.classList.toggle('on');
+    });
+  });
+});
+document.querySelectorAll('.toggle[data-standalone-toggle]').forEach(t=>{
+  t.addEventListener('click',()=>{ t.classList.toggle('on'); });
+});
+</script>
+</body>
+</html>

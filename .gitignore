@@ -1,0 +1,34 @@
+# Reference project copy (duplicate of F:\Pesa Hi Pesa) - not part of LuceEdge
+Pesa Hi Pesa/
+
+# Local Claude Code tool-permission history - accumulates command strings
+# that can include secrets pasted/used during a session
+.claude/
+
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Supabase local
+supabase/.branches
+supabase/.temp
+
+# Build
+dist/
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+.vercel

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M6 — Dashboard · UI Screen Mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0D1B2A; --navy:#1F3A5F; --paper:#F4F6F9; --surface:#fff;
+  --line:#DCE3EA; --line-soft:#EDF1F5;
+  --text:#16202B; --muted:#5D6B7A; --faint:#8C99A6;
+  --action:#1E6FA8; --action-dark:#175A88; --action-soft:#E8F1F8;
+  --profit:#0F6E56; --profit-soft:#E4F4EE;
+  --loss:#A8341A; --loss-soft:#FBEBE6;
+  --warn:#8A6A00; --warn-soft:#FBF3DC;
+  --r:10px; --rs:7px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:15px;line-height:1.55;}
+.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+h1,h2,h3,h4{margin:0;line-height:1.25;font-weight:600}
+a{color:var(--action)}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--action);outline-offset:2px;border-radius:4px}
+
+.topbar{position:sticky;top:0;z-index:50;background:var(--ink);color:#fff;
+  padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  border-bottom:1px solid #0a1420}
+.topbar .brand{font-weight:700;letter-spacing:-.01em;font-size:16px}
+.topbar .tag{font-size:11px;padding:3px 7px;border-radius:5px;background:#1E3549;color:#9FC4E0;letter-spacing:.06em}
+.topbar .sub{color:#93A7B8;font-size:13px;flex:1;min-width:180px}
+.topbar .legend{display:flex;gap:12px;font-size:11.5px;color:#93A7B8;flex-wrap:wrap}
+.topbar .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+
+.shell{display:flex;align-items:flex-start;gap:24px;max-width:1500px;margin:0 auto;padding:24px 20px 80px}
+.rail{position:sticky;top:74px;width:238px;flex:0 0 238px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);padding:10px;max-height:calc(100vh - 100px);overflow:auto}
+.rail h4{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);
+  padding:6px 8px 8px}
+.rail a{display:flex;gap:9px;align-items:baseline;padding:7px 9px;border-radius:var(--rs);
+  text-decoration:none;color:var(--text);font-size:13.5px}
+.rail a:hover{background:var(--paper)}
+.rail a .n{font-size:10.5px;color:var(--faint);letter-spacing:.02em}
+main{flex:1;min-width:0;display:flex;flex-direction:column;gap:22px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.card-head{padding:16px 18px 14px;border-bottom:1px solid var(--line-soft)}
+.card-head .idline{display:flex;align-items:center;gap:10px;margin-bottom:5px;flex-wrap:wrap}
+.card-head .sid{font-size:11px;font-weight:700;color:var(--action);background:var(--action-soft);
+  padding:2px 7px;border-radius:5px;letter-spacing:.04em}
+.card-head h2{font-size:16.5px}
+.card-head .purpose{margin:0;color:var(--muted);font-size:13.5px;max-width:70ch}
+.card-tools{display:flex;gap:14px;justify-content:space-between;align-items:center;
+  padding:10px 18px;background:#FAFBFC;border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
+.seg{display:flex;gap:3px;background:#EBEFF3;padding:3px;border-radius:8px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;color:var(--muted);font-size:11.5px;font-weight:500;
+  padding:5px 10px;border-radius:6px;letter-spacing:.02em}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);
+  box-shadow:0 1px 2px rgba(13,27,42,.13);font-weight:600}
+.tool-lab{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-right:2px;align-self:center}
+
+.stage{padding:22px 18px;background:
+  linear-gradient(0deg,rgba(13,27,42,.025),rgba(13,27,42,.025)),var(--surface);
+  display:flex;justify-content:center}
+.frame{width:100%;max-width:980px;transition:max-width .18s ease}
+.stage[data-vp="mobile"] .frame{max-width:378px}
+.app{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;box-shadow:0 1px 3px rgba(13,27,42,.06)}
+
+.notes{border-top:1px solid var(--line-soft);padding:14px 18px 16px;background:#FBFCFD}
+.notes h5{margin:0 0 7px;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+.notes ul{margin:0 0 12px;padding-left:17px;color:var(--muted);font-size:13px}
+.notes ul:last-child{margin-bottom:0}
+.notes li{margin-bottom:3px}
+.notes .k{color:var(--text);font-weight:600}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:11px;padding:3px 8px;border-radius:20px;background:var(--paper);
+  border:1px solid var(--line);color:var(--muted)}
+
+.scr{padding:26px 24px}
+.scr h3{font-size:20px;letter-spacing:-.015em;margin-bottom:5px}
+.scr .lede{color:var(--muted);font-size:13.5px;margin:0 0 20px}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px}
+.input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:var(--rs);
+  background:var(--surface);font-size:14px;color:var(--text)}
+.input::placeholder{color:var(--faint)}
+.input:focus{outline:none;border-color:var(--action);box-shadow:0 0 0 3px rgba(30,111,168,.13)}
+.hint{font-size:11.5px;color:var(--faint);margin-top:5px}
+
+.btn{width:100%;padding:11px 14px;border-radius:var(--rs);border:1px solid transparent;
+  font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:var(--action);color:#fff}
+.btn-primary:hover{background:var(--action-dark)}
+.btn-ghost{background:var(--surface);border-color:var(--line);color:var(--text)}
+.btn-ghost:hover{background:var(--paper)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn-row{display:flex;gap:10px}
+.btn-sm{width:auto;padding:7px 12px;font-size:12.5px}
+
+.banner{display:flex;gap:10px;padding:11px 13px;border-radius:var(--rs);font-size:13px;
+  margin-bottom:16px;align-items:flex-start;line-height:1.45}
+.banner b{display:block;margin-bottom:1px}
+.b-err{background:var(--loss-soft);color:#7d2612;border:1px solid #f0cdc2}
+.b-ok{background:var(--profit-soft);color:#0a5442;border:1px solid #bfe3d7}
+.b-warn{background:var(--warn-soft);color:#6B5200;border:1px solid #ecd9a4}
+.b-info{background:var(--action-soft);color:#155580;border:1px solid #c9e0f0}
+
+.pane{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 17px;margin-bottom:14px}
+.pane h4{font-size:14px;margin-bottom:3px}
+.pane .sub{color:var(--muted);font-size:12.5px;margin:0 0 13px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.row:last-child{border-bottom:0;padding-bottom:0}
+.row .l{font-size:13.5px;font-weight:500}
+.row .d{font-size:12px;color:var(--faint);margin-top:1px}
+.badge{font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:5px;letter-spacing:.03em}
+.bg-ok{background:var(--profit-soft);color:var(--profit)}
+.bg-warn{background:var(--warn-soft);color:var(--warn)}
+.bg-err{background:var(--loss-soft);color:var(--loss)}
+.bg-off{background:var(--paper);color:var(--muted);border:1px solid var(--line)}
+
+.empty{text-align:center;padding:34px 10px;color:var(--muted)}
+.empty .ico{width:42px;height:42px;border-radius:11px;background:var(--paper);border:1px solid var(--line);
+  display:grid;place-items:center;margin:0 auto 12px;font-size:19px}
+
+/* stat tiles */
+.statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stage[data-vp="mobile"] .statgrid{grid-template-columns:1fr 1fr}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);padding:12px 13px}
+.stat .n{font-size:19px;font-weight:700;font-family:"JetBrains Mono",monospace}
+.stat .l{font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.pl-pos{color:var(--profit)}
+.pl-neg{color:var(--loss)}
+
+/* equity curve (sparkline-style svg placeholder) */
+.curve{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin-bottom:14px}
+.curve svg{width:100%;height:120px;display:block}
+
+/* strategy / breakdown rows */
+.bdrow{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;background:var(--surface);margin-bottom:9px}
+.bdrow .name{font-size:13.5px;font-weight:600}
+.bdrow .meta{font-size:11.5px;color:var(--faint);margin-top:2px}
+.bdrow .right{text-align:right}
+.bar{height:6px;border-radius:4px;background:#E3E8ED;overflow:hidden;margin-top:6px;width:140px}
+.bar i{display:block;height:100%;background:var(--profit)}
+
+/* heatmap grid */
+.heat{display:grid;grid-template-columns:80px repeat(4,1fr);gap:4px;font-size:11px}
+.heat .hd{font-size:10px;color:var(--faint);text-align:center;padding:4px 0;font-weight:600}
+.heat .rl{font-size:11px;color:var(--muted);display:flex;align-items:center;font-weight:600}
+.heat .cell{border-radius:6px;padding:10px 4px;text-align:center;font-weight:700;color:#fff;font-family:"JetBrains Mono",monospace;font-size:11px}
+
+/* widget canvas (custom view builder) */
+.canvas{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.widget{border:1.5px dashed var(--line);border-radius:var(--r);padding:14px;background:var(--surface);
+  min-height:90px;position:relative}
+.widget .wtitle{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.widget .rm{position:absolute;top:8px;right:8px;font-size:11px;color:var(--loss);background:none;border:0}
+.widlib{display:flex;flex-wrap:wrap;gap:8px}
+.widlib button{padding:8px 12px;border-radius:20px;border:1px solid var(--line);background:var(--surface);
+  font-size:12px;color:var(--muted)}
+
+/* filter chips */
+.chipsel{display:flex;flex-wrap:wrap;gap:8px}
+.chipsel button{padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--surface);
+  font-size:12.5px;color:var(--muted);font-weight:500}
+.chipsel button.on{background:var(--action-soft);border-color:var(--action);color:var(--action-dark);font-weight:700}
+
+/* share link box */
+.linkbox{display:flex;gap:8px;align-items:center;background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--rs);padding:10px 12px;font-size:12.5px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.linkbox button{flex:0 0 auto;padding:5px 10px;font-size:11.5px}
+
+/* responsive */
+@media(max-width:960px){
+  .shell{flex-direction:column;padding:16px 14px 60px;gap:14px}
+  .rail{position:static;width:100%;flex:none;max-height:none;display:flex;gap:6px;overflow-x:auto;padding:8px}
+  .rail h4{display:none}
+  .rail a{white-space:nowrap;background:var(--paper);border:1px solid var(--line)}
+  .stage{padding:16px 12px}
+  .card-tools{gap:10px}
+  .statgrid{grid-template-columns:1fr 1fr}
+  .canvas{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .scr{padding:20px 16px}
+  .topbar .legend{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="brand">Trading Journal</span>
+  <span class="tag mono">M6</span>
+  <span class="sub">Dashboard — UI screen mockups · v1.0</span>
+  <span class="legend">
+    <span><i style="background:#1E6FA8"></i>action</span>
+    <span><i style="background:#0F6E56"></i>profit / on-track</span>
+    <span><i style="background:#A8341A"></i>loss / needs attention</span>
+    <span><i style="background:#8A6A00"></i>flagged</span>
+  </span>
+</header>
+
+<div class="shell">
+  <nav class="rail" aria-label="Screen index">
+    <h4>Screens</h4>
+    <a href="#M6-S01"><span class="n mono">S01</span> Overview dashboard</a>
+    <a href="#M6-S02"><span class="n mono">S02</span> Strategy breakdown</a>
+    <a href="#M6-S03"><span class="n mono">S03</span> Session &amp; symbol</a>
+    <a href="#M6-S04"><span class="n mono">S04</span> Custom view builder</a>
+    <a href="#M6-S05"><span class="n mono">S05</span> Filters &amp; saved views</a>
+    <a href="#M6-S06"><span class="n mono">S06</span> Export &amp; share</a>
+  </nav>
+
+  <main>
+
+  <!-- ================= S01 ================= -->
+  <section class="card" id="M6-S01" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M6-S01</span><h2>Overview dashboard</h2></div>
+      <p class="purpose">The home screen of M6. Everything shown here is read directly from M3's AggregateSnapshot — M6 never computes a statistic itself, only renders one (Figure 6.1).</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="empty" aria-pressed="false">Empty</button>
+        <button data-set="default" aria-pressed="true">Has data</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <h3>Dashboard</h3>
+        <p class="lede">Last 30 days · All strategies</p>
+
+        <div data-when="empty">
+          <div class="empty">
+            <div class="ico">📊</div>
+            <div style="font-size:13.5px;font-weight:600;color:var(--text)">Nothing to show yet</div>
+            <div style="font-size:12.5px;color:var(--faint);margin-top:3px">Once you've logged a few trades in M5, your stats will appear here.</div>
+          </div>
+        </div>
+
+        <div data-when="default">
+          <div class="statgrid">
+            <div class="stat"><div class="n pl-pos">+$3,420</div><div class="l">total P&amp;L</div></div>
+            <div class="stat"><div class="n">61%</div><div class="l">win rate</div></div>
+            <div class="stat"><div class="n">1.9R</div><div class="l">avg R-multiple</div></div>
+            <div class="stat"><div class="n">2.3</div><div class="l">profit factor</div></div>
+          </div>
+
+          <div class="curve">
+            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">Equity curve</div>
+            <svg viewBox="0 0 400 100" preserveAspectRatio="none">
+              <polyline fill="none" stroke="#0F6E56" stroke-width="2.5"
+                points="0,80 30,75 60,78 90,60 120,64 150,45 180,50 210,38 240,42 270,25 300,30 330,15 360,20 400,10"/>
+            </svg>
+          </div>
+
+          <div class="pane">
+            <h4>Recent trades</h4>
+            <div class="row"><span class="l">ES · Long</span><span class="pl-pos mono">+$612</span></div>
+            <div class="row"><span class="l">GOLD · Long</span><span class="pl-neg mono">-$210</span></div>
+            <div class="row"><span class="l">NQ · Long</span><span class="pl-pos mono">+$340</span></div>
+          </div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Stat tiles and equity curve</span> — read straight from AggregateSnapshot, grouped by the active date range; nothing here is computed live from raw trades.</li>
+        <li>The recent-trades pane links into M5's Trade detail (M5-S04) for any row.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>The default view is a system-defined layout; a trader with no saved custom layout always sees this one (Section 4.4).</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-01</span><span class="chip mono">US-02</span><span class="chip">reads M3 AggregateSnapshot</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S02 ================= -->
+  <section class="card" id="M6-S02" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M6-S02</span><h2>Strategy breakdown</h2></div>
+      <p class="purpose">Performance per strategy, joining M3's aggregates with M4's Strategy metadata — win rate, avg R and trade count side by side, so a trader can see which strategies actually work for them.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="empty" aria-pressed="false">Empty</button>
+        <button data-set="default" aria-pressed="true">Has strategies</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <h3>By strategy</h3>
+        <p class="lede">Sorted by total P&amp;L · last 90 days</p>
+
+        <div data-when="empty">
+          <div class="empty">
+            <div class="ico">🧩</div>
+            <div style="font-size:13.5px;font-weight:600;color:var(--text)">No tagged trades yet</div>
+            <div style="font-size:12.5px;color:var(--faint);margin-top:3px">Tag trades with a strategy in M5 to see a breakdown here.</div>
+          </div>
+        </div>
+
+        <div data-when="default">
+          <div class="bdrow">
+            <div>
+              <div class="name">Scaled ES opening range</div>
+              <div class="meta">42 trades · 68% win rate · 2.1R avg</div>
+              <div class="bar"><i style="width:82%"></i></div>
+            </div>
+            <div class="right"><div class="pl-pos mono" style="font-size:15px;font-weight:700">+$2,180</div></div>
+          </div>
+          <div class="bdrow">
+            <div>
+              <div class="name">London killzone reversal</div>
+              <div class="meta">19 trades · 58% win rate · 1.6R avg</div>
+              <div class="bar"><i style="width:64%"></i></div>
+            </div>
+            <div class="right"><div class="pl-pos mono" style="font-size:15px;font-weight:700">+$890</div></div>
+          </div>
+          <div class="bdrow">
+            <div>
+              <div class="name">Gold NY session breakout</div>
+              <div class="meta">11 trades · 36% win rate · -0.4R avg</div>
+              <div class="bar"><i style="width:22%;background:var(--loss)"></i></div>
+            </div>
+            <div class="right"><div class="pl-neg mono" style="font-size:15px;font-weight:700">-$350</div></div>
+          </div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Breakdown row</span> — strategy name, trade count, win rate, avg R and total P&amp;L, all read from AggregateSnapshot filtered by strategy_id; the mini bar is a simple win-rate visual, not a separate metric.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>Archived strategies (M4) still appear here if they have trade history in the active date range — retiring a strategy never hides its past performance.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-03</span><span class="chip mono">US-04</span><span class="chip">reads M3 + M4</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S03 ================= -->
+  <section class="card" id="M6-S03" data-state="session">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M6-S03</span><h2>Session &amp; symbol breakdown</h2></div>
+      <p class="purpose">A heatmap view for combinations M3 doesn't precompute directly — built on demand by aggregating M3's already-computed per-trade P&amp;L, never a new calculation (Figure 6.1).</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">Group by</span>
+        <button data-set="session" aria-pressed="true">Session</button>
+        <button data-set="symbol" aria-pressed="false">Symbol</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <div data-when="session">
+          <h3>P&amp;L by session and weekday</h3>
+          <p class="lede">Color = relative P&amp;L for that cell · last 90 days</p>
+          <div class="heat">
+            <div></div><div class="hd">Mon</div><div class="hd">Tue</div><div class="hd">Wed</div><div class="hd">Thu</div>
+            <div class="rl">Asian</div>
+            <div class="cell" style="background:#8fc9b3">+$40</div>
+            <div class="cell" style="background:#c98f8f">-$60</div>
+            <div class="cell" style="background:#8fc9b3">+$90</div>
+            <div class="cell" style="background:#a9a9a9">$0</div>
+            <div class="rl">London</div>
+            <div class="cell" style="background:#0F6E56">+$410</div>
+            <div class="cell" style="background:#4a9d82">+$180</div>
+            <div class="cell" style="background:#0F6E56">+$520</div>
+            <div class="cell" style="background:#c98f8f">-$70</div>
+            <div class="rl">NY overlap</div>
+            <div class="cell" style="background:#0F6E56">+$612</div>
+            <div class="cell" style="background:#A8341A">-$310</div>
+            <div class="cell" style="background:#4a9d82">+$220</div>
+            <div class="cell" style="background:#0F6E56">+$480</div>
+            <div class="rl">New York</div>
+            <div class="cell" style="background:#4a9d82">+$150</div>
+            <div class="cell" style="background:#8fc9b3">+$60</div>
+            <div class="cell" style="background:#c98f8f">-$40</div>
+            <div class="cell" style="background:#8fc9b3">+$30</div>
+          </div>
+        </div>
+        <div data-when="symbol">
+          <h3>P&amp;L by symbol</h3>
+          <p class="lede">Last 90 days</p>
+          <div class="bdrow"><div class="name">ES</div><div class="right pl-pos mono" style="font-size:15px;font-weight:700">+$1,940</div></div>
+          <div class="bdrow"><div class="name">NQ</div><div class="right pl-pos mono" style="font-size:15px;font-weight:700">+$780</div></div>
+          <div class="bdrow"><div class="name">EURUSD</div><div class="right pl-pos mono" style="font-size:15px;font-weight:700">+$260</div></div>
+          <div class="bdrow"><div class="name">GOLD</div><div class="right pl-neg mono" style="font-size:15px;font-weight:700">-$560</div></div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Heatmap cell</span> — an on-demand sum of already-computed Trade.pnl values for that session/weekday (or symbol) bucket, scoped to the active filter; never a recomputation of P&amp;L itself.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>On-demand aggregation is always bounded to the active date range and filter — an unbounded full-history heatmap query is not supported (Section 11).</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-05</span><span class="chip">ad-hoc aggregation, not recompute</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S04 ================= -->
+  <section class="card" id="M6-S04" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M6-S04</span><h2>Custom view builder</h2></div>
+      <p class="purpose">A trader can arrange their own dashboard from a library of widgets and save it as a DashboardLayout, instead of always seeing the system default.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="empty" aria-pressed="false">Empty canvas</button>
+        <button data-set="default" aria-pressed="true">Editing</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <h3>Build a custom view</h3>
+        <p class="lede">Drag widgets from the library onto your layout, then save.</p>
+
+        <div class="field"><label>Widget library</label>
+          <div class="widlib">
+            <button>+ Equity curve</button>
+            <button>+ Win rate</button>
+            <button>+ Strategy breakdown</button>
+            <button>+ Session heatmap</button>
+            <button>+ Feeling tags</button>
+            <button>+ Checklist adherence</button>
+          </div>
+        </div>
+
+        <div data-when="empty">
+          <div class="empty">
+            <div class="ico">🧱</div>
+            <div style="font-size:13.5px;font-weight:600;color:var(--text)">Your canvas is empty</div>
+            <div style="font-size:12.5px;color:var(--faint);margin-top:3px">Add a widget from the library above to get started.</div>
+          </div>
+        </div>
+
+        <div data-when="default">
+          <div class="canvas">
+            <div class="widget"><button class="rm">✕</button><div class="wtitle">EQUITY CURVE</div>Chart preview</div>
+            <div class="widget"><button class="rm">✕</button><div class="wtitle">WIN RATE</div>61%</div>
+            <div class="widget"><button class="rm">✕</button><div class="wtitle">STRATEGY BREAKDOWN</div>3 strategies</div>
+            <div class="widget"><button class="rm">✕</button><div class="wtitle">CHECKLIST ADHERENCE</div>82%</div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="margin-top:16px">Save this layout</button>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Widget library</span> — every widget type reads from an existing M3/M4/M5 data source; there is no widget type that requires a new calculation to be built.</li>
+        <li>Removing a widget only changes the layout, never deletes any underlying data.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>A trader can save any number of named layouts and switch between them; there is always exactly one system default layout as a non-deletable fallback.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-06</span><span class="chip mono">US-07</span><span class="chip">writes DashboardLayout</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S05 ================= -->
+  <section class="card" id="M6-S05" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M6-S05</span><h2>Filters &amp; saved views</h2></div>
+      <p class="purpose">Every dashboard screen shares the same filter bar — date range, strategy, session, symbol — and any combination can be saved for one-tap reuse (Figure 6.3).</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="default" aria-pressed="true">Default</button>
+        <button data-set="saved" aria-pressed="false">Saved</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <h3>Filters</h3>
+        <p class="lede">Applies to every widget on the current view.</p>
+
+        <div class="field"><label>Date range</label>
+          <div class="chipsel">
+            <button>7 days</button>
+            <button class="on">30 days</button>
+            <button>90 days</button>
+            <button>Custom</button>
+          </div>
+        </div>
+        <div class="field"><label>Strategy</label>
+          <div class="chipsel">
+            <button class="on">All</button>
+            <button>Scaled ES opening range</button>
+            <button>London killzone reversal</button>
+            <button>Gold NY session breakout</button>
+          </div>
+        </div>
+        <div class="field"><label>Session</label>
+          <div class="chipsel">
+            <button class="on">All</button>
+            <button>Asian</button>
+            <button>London</button>
+            <button>NY overlap</button>
+            <button>New York</button>
+          </div>
+        </div>
+
+        <div data-when="saved" class="banner b-ok"><span>✅</span><span><b>Saved as “30-day core review”</b>Applied automatically the next time you pick it from the filter menu.</span></div>
+
+        <div class="btn-row" style="margin-top:6px">
+          <button class="btn btn-ghost" data-when="default">Save this combination</button>
+          <button class="btn btn-primary">Apply</button>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Shared filter bar</span> — the same component appears (collapsed) at the top of S01–S04, so a trader never has to re-set a filter per screen.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>Changing a filter re-queries each active widget at the new scope; it never triggers a recalculation anywhere else in the app (Figure 6.3) — filtering is always a query-time operation.</li>
+        <li>Saved filters are personal to the trader; there is no shared or team-wide filter concept in v1.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-08</span><span class="chip mono">US-09</span><span class="chip">writes SavedFilter</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S06 ================= -->
+  <section class="card" id="M6-S06" data-state="export">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M6-S06</span><h2>Export &amp; share</h2></div>
+      <p class="purpose">Turn the current view into a downloadable file, or a read-only link a trader can send to a mentor, coach, or prop firm without giving them app access (Figure 6.2).</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="export" aria-pressed="true">Export</button>
+        <button data-set="share" aria-pressed="false">Share link</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <h3>Export &amp; share</h3>
+        <p class="lede">Based on your current view and filters.</p>
+
+        <div data-when="export">
+          <div class="field"><label>Format</label>
+            <div class="chipsel"><button class="on">PDF report</button><button>CSV data</button></div>
+          </div>
+          <button class="btn btn-primary">Download</button>
+        </div>
+
+        <div data-when="share">
+          <div class="field"><label>Link expires</label>
+            <div class="chipsel"><button>7 days</button><button class="on">30 days</button><button>Never</button></div>
+          </div>
+          <div class="field" style="margin-bottom:0"><label>Read-only link</label>
+            <div class="linkbox"><span style="flex:1">journal.app/share/8f2a91c…</span><button class="btn btn-sm btn-ghost">Copy</button></div>
+          </div>
+          <button class="btn btn-ghost" style="margin-top:14px">Revoke this link</button>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Export</span> renders a static snapshot of the current view; <span class="k">share link</span> creates a live, scoped, expiring ShareLink instead — the recipient sees the dashboard update, but only within whatever filters were active when the link was created.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>A share link is always read-only and always scoped to the filters active at creation — it can never expose more than the view it was generated from, and can never write anything back.</li>
+        <li>Revoking a link takes effect immediately; a revoked link's token is never reused for a new link.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-10</span><span class="chip mono">US-11</span><span class="chip">writes Report / ShareLink</span></div>
+    </div>
+  </section>
+
+  </main>
+</div>
+
+<script>
+function applyState(card){
+  const state = card.dataset.state;
+  card.querySelectorAll('[data-when]').forEach(el=>{
+    const owner = el.closest('.card');
+    if(owner !== card) return;
+    const list = el.dataset.when.trim().split(/\s+/);
+    el.style.display = list.includes(state) ? '' : 'none';
+  });
+}
+document.querySelectorAll('.card').forEach(card=>{
+  applyState(card);
+  const stateWrap = card.querySelector('[data-role="states"]');
+  if(stateWrap){
+    stateWrap.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        stateWrap.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false'));
+        btn.setAttribute('aria-pressed','true');
+        card.dataset.state = btn.dataset.set;
+        applyState(card);
+      });
+    });
+  }
+  const vpWrap = card.querySelector('[data-role="vp"]');
+  const stage  = card.querySelector('.stage');
+  if(vpWrap && stage){
+    vpWrap.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        vpWrap.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false'));
+        btn.setAttribute('aria-pressed','true');
+        stage.dataset.vp = btn.dataset.vp;
+      });
+    });
+  }
+});
+document.querySelectorAll('.chipsel button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    b.classList.toggle('on');
+  });
+});
+</script>
+</body>
+</html>

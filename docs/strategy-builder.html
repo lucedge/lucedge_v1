@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Strategy Builder</title>
+<style>
+  :root{
+    --bg:#000;--surface:#1c1c1e;--surface-2:#2c2c2e;--surface-3:#3a3a3c;
+    --hair:rgba(255,255,255,.10);--hair-strong:rgba(255,255,255,.18);
+    --txt:#f5f5f7;--txt-2:#9a9a9f;--txt-3:#6a6a6f;
+    --accent:#0a84ff;--accent-soft:rgba(10,132,255,.16);
+    --green:#30d158;--amber:#ffd60a;--purple:#bf5af2;--teal:#40c8e0;
+    font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;background:#000;overflow:hidden;}
+  body{display:flex;align-items:center;justify-content:center;}
+  .phone{position:relative;width:400px;height:858px;background:var(--bg);border-radius:54px;overflow:hidden;box-shadow:0 0 0 12px #1a1a1c,0 0 0 14px #303032,0 40px 120px rgba(0,0,0,.8);}
+  .notch{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:20px;z-index:200;}
+  .statusbar{position:absolute;top:0;left:0;right:0;height:56px;z-index:150;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;color:var(--txt);pointer-events:none;}
+  .statusbar .ico{display:flex;gap:6px;align-items:center;}
+
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);opacity:0;transform:translateX(30px);pointer-events:none;transition:opacity .42s cubic-bezier(.25,.1,.25,1),transform .42s cubic-bezier(.25,.1,.25,1);}
+  .screen.active{opacity:1;transform:translateX(0);pointer-events:auto;}
+  .screen.exit-left{transform:translateX(-30px);}
+
+  .nav{padding:62px 20px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+  .nav-back{font-size:16px;color:var(--accent);font-weight:400;display:flex;align-items:center;gap:2px;cursor:pointer;min-width:64px;}
+  .nav-back svg{width:11px;height:18px;}
+  .nav-title{font-size:16px;font-weight:600;color:var(--txt);}
+  .nav-right{min-width:64px;text-align:right;font-size:16px;color:var(--accent);font-weight:600;cursor:pointer;}
+  .nav-right.disabled{color:var(--txt-3);pointer-events:none;}
+
+  .scroll{flex:1;overflow-y:auto;padding:0 20px 140px;-webkit-overflow-scrolling:touch;}
+  .scroll::-webkit-scrollbar{display:none;}
+
+  .h1{font-size:30px;font-weight:700;letter-spacing:-.5px;color:var(--txt);line-height:1.1;margin-top:6px;}
+  .sub{font-size:15px;color:var(--txt-2);line-height:1.45;margin-top:8px;}
+
+  .prog{display:flex;gap:6px;padding:6px 20px 18px;flex-shrink:0;}
+  .prog span{height:4px;flex:1;background:var(--surface-3);border-radius:2px;transition:background .35s;}
+  .prog span.on{background:var(--accent);}
+
+  .lbl{font-size:12.5px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--txt-3);margin:24px 4px 10px;}
+
+  .search{display:flex;align-items:center;gap:9px;background:var(--surface-2);border-radius:12px;padding:11px 14px;margin-top:14px;}
+  .search svg{width:16px;height:16px;color:var(--txt-3);flex-shrink:0;}
+  .search input{flex:1;background:none;border:none;outline:none;color:var(--txt);font-size:15px;font-family:inherit;}
+  .search input::placeholder{color:var(--txt-3);}
+
+  .tpl{background:var(--surface);border:1px solid var(--hair);border-radius:20px;padding:16px;display:flex;gap:14px;align-items:center;cursor:pointer;margin-bottom:11px;transition:transform .18s ease,border-color .2s,background .2s;}
+  .tpl:active{transform:scale(.975);}
+  .tpl.sel{border-color:var(--accent);background:var(--accent-soft);}
+  .tpl-ico{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;}
+  .tpl-body{flex:1;min-width:0;}
+  .tpl-name{font-size:16px;font-weight:600;color:var(--txt);}
+  .tpl-desc{font-size:12.5px;color:var(--txt-2);margin-top:3px;line-height:1.35;}
+  .tpl-meta{font-size:11px;color:var(--txt-3);margin-top:6px;font-weight:500;}
+  .tpl-check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--hair-strong);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+  .tpl.sel .tpl-check{background:var(--accent);border-color:var(--accent);}
+  .tpl-check svg{width:12px;height:12px;opacity:0;transform:scale(.5);transition:all .2s;}
+  .tpl.sel .tpl-check svg{opacity:1;transform:scale(1);}
+
+  .var-row{background:var(--surface);border:1px solid var(--hair);border-radius:16px;padding:15px 16px;display:flex;align-items:center;gap:13px;margin-bottom:10px;cursor:pointer;transition:transform .18s ease;animation:fadeUp .4s backwards;}
+  .var-row:active{transform:scale(.985);}
+  .var-ico{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .var-ico svg{width:19px;height:19px;}
+  .var-info{flex:1;min-width:0;}
+  .var-name{font-size:15.5px;font-weight:600;color:var(--txt);}
+  .var-type{font-size:12.5px;color:var(--txt-2);margin-top:2px;}
+  .var-opts{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap;}
+  .chip{font-size:11px;font-weight:500;background:var(--surface-2);color:var(--txt-2);padding:3px 9px;border-radius:7px;}
+  .var-drag{color:var(--txt-3);flex-shrink:0;display:flex;flex-direction:column;gap:3px;}
+  .var-drag span{width:16px;height:1.5px;background:currentColor;border-radius:2px;}
+
+  .add-var{width:100%;background:transparent;border:1.5px dashed var(--hair-strong);border-radius:16px;padding:16px;color:var(--accent);font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-top:4px;transition:background .2s,transform .18s;}
+  .add-var:active{transform:scale(.98);background:var(--surface);}
+  .add-var svg{width:17px;height:17px;}
+
+  .cap{display:flex;gap:11px;align-items:flex-start;background:rgba(255,214,10,.10);border:1px solid rgba(255,214,10,.25);border-radius:14px;padding:13px 14px;margin-top:18px;}
+  .cap svg{width:18px;height:18px;flex-shrink:0;margin-top:1px;color:var(--amber);}
+  .cap p{font-size:13px;color:#e8d48a;line-height:1.4;}
+
+  .sheet-scrim{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s;z-index:300;}
+  .sheet-scrim.open{opacity:1;pointer-events:auto;}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:30px 30px 0 0;padding:10px 20px 28px;transform:translateY(100%);transition:transform .42s cubic-bezier(.32,.72,0,1);z-index:301;max-height:90%;overflow-y:auto;}
+  .sheet.open{transform:translateY(0);}
+  .sheet::-webkit-scrollbar{display:none;}
+  .grab{width:38px;height:5px;background:var(--surface-3);border-radius:3px;margin:0 auto 18px;}
+  .sheet-h{font-size:21px;font-weight:700;color:var(--txt);letter-spacing:-.3px;}
+  .sheet-sub{font-size:13.5px;color:var(--txt-2);margin-top:5px;line-height:1.4;}
+
+  .field-lbl{font-size:12.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--txt-3);margin:22px 2px 9px;}
+  .input{width:100%;background:var(--surface-2);border:1px solid var(--hair);border-radius:13px;padding:14px 15px;color:var(--txt);font-size:16px;font-family:inherit;outline:none;transition:border-color .2s;}
+  .input:focus{border-color:var(--accent);}
+  .input::placeholder{color:var(--txt-3);}
+
+  .types{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .type-card{background:var(--surface-2);border:1.5px solid var(--hair);border-radius:15px;padding:14px;cursor:pointer;transition:all .2s,transform .16s;}
+  .type-card:active{transform:scale(.96);}
+  .type-card.sel{border-color:var(--accent);background:var(--accent-soft);}
+  .type-card .t-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+  .type-card .t-ico svg{width:18px;height:18px;}
+  .type-card .t-name{font-size:14.5px;font-weight:600;color:var(--txt);}
+  .type-card .t-ex{font-size:11.5px;color:var(--txt-2);margin-top:3px;line-height:1.3;}
+
+  .opt-item{display:flex;gap:9px;align-items:center;margin-bottom:9px;animation:fadeUp .3s backwards;}
+  .opt-item .input{flex:1;}
+  .opt-del{width:30px;height:30px;border-radius:50%;background:var(--surface-3);color:var(--txt-2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:18px;line-height:0;}
+  .opt-add{font-size:14px;color:var(--accent);font-weight:600;cursor:pointer;padding:6px 2px;display:inline-flex;align-items:center;gap:6px;}
+  .opt-add svg{width:15px;height:15px;}
+
+  .scale-row{display:flex;gap:10px;}
+  .scale-row .input{flex:1;text-align:center;}
+  .scale-prev{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap;}
+  .scale-prev span{width:36px;height:36px;border-radius:10px;background:var(--surface-2);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--txt-2);}
+
+  .toggle-prev{display:flex;align-items:center;justify-content:space-between;background:var(--surface-2);border-radius:13px;padding:14px 16px;margin-top:8px;}
+  .toggle-prev span{font-size:15px;color:var(--txt);}
+  .tg{width:51px;height:31px;background:var(--green);border-radius:980px;position:relative;flex-shrink:0;}
+  .tg::after{content:"";position:absolute;top:2px;left:22px;width:27px;height:27px;background:#fff;border-radius:50%;box-shadow:0 2px 5px rgba(0,0,0,.3);}
+
+  .num-prev{background:var(--surface-2);border-radius:13px;padding:14px 16px;margin-top:8px;display:flex;align-items:center;justify-content:space-between;}
+  .num-prev span{font-size:15px;color:var(--txt-3);}
+  .num-prev b{font-size:17px;color:var(--txt);font-weight:600;}
+
+  .hint{display:flex;gap:9px;align-items:flex-start;background:var(--accent-soft);border-radius:12px;padding:12px 13px;margin-top:20px;}
+  .hint svg{width:16px;height:16px;flex-shrink:0;margin-top:1px;color:var(--accent);}
+  .hint p{font-size:12.5px;color:#9fcbff;line-height:1.4;}
+
+  .sheet-btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:15px;padding:16px;font-size:16.5px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:26px;transition:transform .16s,filter .2s;}
+  .sheet-btn:active{transform:scale(.98);filter:brightness(1.1);}
+  .sheet-btn.disabled{background:var(--surface-3);color:var(--txt-3);pointer-events:none;}
+
+  .cta-bar{position:absolute;left:0;right:0;bottom:0;padding:14px 20px 30px;background:linear-gradient(to top,rgba(0,0,0,.95) 60%,transparent);z-index:100;}
+  .cta{width:100%;background:var(--accent);color:#fff;border:none;border-radius:16px;padding:17px;font-size:17px;font-weight:600;font-family:inherit;cursor:pointer;transition:transform .16s,filter .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .cta:active{transform:scale(.98);filter:brightness(1.1);}
+  .cta.disabled{background:var(--surface-3);color:var(--txt-3);pointer-events:none;}
+  .cta svg{width:17px;height:17px;}
+
+  .summary-card{background:var(--surface);border:1px solid var(--hair);border-radius:22px;padding:20px;margin-top:8px;}
+  .sc-top{display:flex;align-items:center;gap:14px;padding-bottom:18px;border-bottom:1px solid var(--hair);}
+  .sc-ico{width:52px;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+  .sc-name{font-size:19px;font-weight:700;color:var(--txt);}
+  .sc-count{font-size:13px;color:var(--txt-2);margin-top:3px;}
+  .sc-var{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--hair);}
+  .sc-var:last-child{border-bottom:none;padding-bottom:0;}
+  .sc-vico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .sc-vico svg{width:16px;height:16px;}
+  .sc-vname{font-size:15px;font-weight:600;color:var(--txt);}
+  .sc-vtype{font-size:12px;color:var(--txt-2);margin-top:1px;}
+  .insight-prev{background:linear-gradient(135deg,rgba(10,132,255,.14),rgba(191,90,242,.12));border:1px solid rgba(10,132,255,.25);border-radius:18px;padding:18px;margin-top:18px;}
+  .ip-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--accent);display:flex;align-items:center;gap:6px;}
+  .ip-tag svg{width:13px;height:13px;}
+  .ip-text{font-size:14.5px;color:var(--txt);line-height:1.5;margin-top:10px;}
+  .ip-text b{color:var(--green);}
+
+  .toast{position:absolute;top:70px;left:50%;transform:translateX(-50%) translateY(-80px);background:rgba(48,209,88,.95);color:#fff;padding:13px 22px;border-radius:980px;font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:8px;z-index:400;opacity:0;transition:all .4s cubic-bezier(.25,.1,.25,1);backdrop-filter:blur(10px);}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+  .toast svg{width:16px;height:16px;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  .empty-note{text-align:center;color:var(--txt-3);font-size:13.5px;padding:30px 20px;line-height:1.5;}
+  .no-res{text-align:center;color:var(--txt-3);font-size:13.5px;padding:24px;}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="notch"></div>
+  <div class="statusbar">
+    <span>9:41</span>
+    <span class="ico">
+      <svg width="17" height="11" viewBox="0 0 17 11" fill="none"><rect y="6" width="3" height="5" rx="1" fill="#f5f5f7"/><rect x="4.5" y="4" width="3" height="7" rx="1" fill="#f5f5f7"/><rect x="9" y="2" width="3" height="9" rx="1" fill="#f5f5f7"/><rect x="13.5" width="3" height="11" rx="1" fill="#f5f5f7"/></svg>
+      <svg width="22" height="11" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3" stroke="#f5f5f7" opacity="0.4"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#f5f5f7"/><rect x="23" y="4" width="1.5" height="4" rx="1" fill="#f5f5f7" opacity="0.5"/></svg>
+    </span>
+  </div>
+
+  <div class="toast" id="toast"><svg viewBox="0 0 20 20" fill="none"><path d="M5 10l3.5 3.5L15 7" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="toastMsg">Saved</span></div>
+
+  <!-- SCREEN 1 -->
+  <div class="screen active" id="s1">
+    <div class="nav">
+      <span class="nav-back" style="visibility:hidden">Back</span>
+      <span class="nav-title">New Strategy</span>
+      <span class="nav-right disabled">Skip</span>
+    </div>
+    <div class="prog"><span class="on"></span><span></span><span></span></div>
+    <div class="scroll">
+      <div class="h1">Pick a starting point</div>
+      <div class="sub">Every trader's edge is different. Start from one that's close to yours and tweak it — or build your own. Nothing here is fixed.</div>
+      <div class="search">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input id="tplSearch" placeholder="Search setups (scalp, ICT, options…)" oninput="filterTpl(this.value)">
+      </div>
+      <div class="lbl">Templates</div>
+      <div id="tplList"></div>
+    </div>
+    <div class="cta-bar"><button class="cta disabled" id="cta1" onclick="goVars()">Continue</button></div>
+  </div>
+
+  <!-- SCREEN 2 -->
+  <div class="screen" id="s2">
+    <div class="nav">
+      <span class="nav-back" onclick="back(2,1)"><svg viewBox="0 0 11 18" fill="none"><path d="M9 1L2 9l7 8" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</span>
+      <span class="nav-title">Your Variables</span>
+      <span class="nav-right" onclick="goReview()">Next</span>
+    </div>
+    <div class="prog"><span class="on"></span><span class="on"></span><span></span></div>
+    <div class="scroll">
+      <div class="h1" id="stratName">My Strategy</div>
+      <div class="sub">These are the things you'll tag on each trade. Later you'll see your win-rate broken down by every one of them.</div>
+      <div class="lbl">Variables</div>
+      <div id="varList"></div>
+      <button class="add-var" onclick="openSheet()"><svg viewBox="0 0 17 17" fill="none"><path d="M8.5 2v13M2 8.5h13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Add variable</button>
+      <div class="cap" id="capWarn" style="display:none">
+        <svg viewBox="0 0 18 18" fill="none"><path d="M9 1l8 15H1L9 1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 7v4M9 13.2v.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <p>That's a lot of variables. More than this and each combination gets too few trades to learn from. Tighter is usually sharper.</p>
+      </div>
+    </div>
+    <div class="cta-bar"><button class="cta" onclick="goReview()">Review strategy</button></div>
+  </div>
+
+  <!-- SCREEN 3 -->
+  <div class="screen" id="s3">
+    <div class="nav">
+      <span class="nav-back" onclick="back(3,2)"><svg viewBox="0 0 11 18" fill="none"><path d="M9 1L2 9l7 8" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</span>
+      <span class="nav-title">Review</span>
+      <span class="nav-right" style="visibility:hidden">Next</span>
+    </div>
+    <div class="prog"><span class="on"></span><span class="on"></span><span class="on"></span></div>
+    <div class="scroll">
+      <div class="h1">Looks good?</div>
+      <div class="sub">Edit anytime — editing later creates a new version, so your past stats stay intact.</div>
+      <div class="summary-card">
+        <div class="sc-top">
+          <div class="sc-ico" id="revIco">🎯</div>
+          <div><div class="sc-name" id="revName">My Strategy</div><div class="sc-count" id="revCount">3 variables</div></div>
+        </div>
+        <div id="revVars"></div>
+      </div>
+      <div class="insight-prev">
+        <div class="ip-tag"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1l1.8 3.8L13 5.4l-3 3 .7 4.1L7 10.6 3.3 12.5 4 8.4l-3-3 4.2-.6L7 1z" fill="currentColor"/></svg>What you'll get</div>
+        <div class="ip-text" id="insightText"></div>
+      </div>
+    </div>
+    <div class="cta-bar"><button class="cta" onclick="finish()"><svg viewBox="0 0 17 17" fill="none"><path d="M3 9l3.5 3.5L14 5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Activate strategy</button></div>
+  </div>
+
+  <!-- SHEET -->
+  <div class="sheet-scrim" id="scrim" onclick="closeSheet()"></div>
+  <div class="sheet" id="sheet">
+    <div class="grab"></div>
+    <div class="sheet-h" id="sheetH">Add a variable</div>
+    <div class="sheet-sub">Name it, pick how you'll record it, done.</div>
+    <div class="field-lbl">Variable name</div>
+    <input class="input" id="vName" placeholder="e.g. Entry level, Session, IV rank" oninput="validateSheet()">
+    <div class="field-lbl">How will you record it?</div>
+    <div class="types" id="typeGrid"></div>
+    <div id="cfg"></div>
+    <button class="sheet-btn disabled" id="sheetBtn" onclick="saveVar()">Add variable</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+var TYPE_LABEL={single:'Pick one',multi:'Pick many',number:'A number',toggle:'Yes / No',scale:'A rating'};
+var TYPE_COLOR={single:'#30d158',multi:'#40c8e0',number:'#0a84ff',toggle:'#ffd60a',scale:'#bf5af2'};
+var TYPE_BG={single:'rgba(48,209,88,.16)',multi:'rgba(64,200,224,.16)',number:'rgba(10,132,255,.16)',toggle:'rgba(255,214,10,.16)',scale:'rgba(191,90,242,.16)'};
+var TYPE_ICON={
+  single:'<svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="C" stroke-width="1.6"/><circle cx="9" cy="9" r="3" fill="C"/></svg>',
+  multi:'<svg viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="14" height="14" rx="4" stroke="C" stroke-width="1.6"/><path d="M5.5 9l2.5 2.5L13 6" stroke="C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  number:'<svg viewBox="0 0 18 18" fill="none"><path d="M6 3L4 15M14 3l-2 12M3 7h12M2.5 11h12" stroke="C" stroke-width="1.6" stroke-linecap="round"/></svg>',
+  toggle:'<svg viewBox="0 0 18 18" fill="none"><rect x="1" y="5" width="16" height="8" rx="4" stroke="C" stroke-width="1.5"/><circle cx="12" cy="9" r="2.5" fill="C"/></svg>',
+  scale:'<svg viewBox="0 0 18 18" fill="none"><path d="M2 14h14M5 14V8M9 14V4M13 14V10" stroke="C" stroke-width="1.8" stroke-linecap="round"/></svg>'
+};
+var TYPE_EX={single:'Level 1 / 2 / 3',multi:'Confluences present',number:'IV rank, R:R, leverage',toggle:'News nearby?',scale:'Conviction 1-5'};
+var TYPE_UNLOCK={single:"You'll see win-rate per option.",multi:"See which combinations of these win most.",number:"We'll bucket these into ranges automatically.",toggle:"Compare your win-rate when on vs off.",scale:"See if higher ratings actually win more."};
+
+var TEMPLATES=[
+ {key:'levels',name:'Multi-Level Entry',icon:'🎯',bg:'rgba(48,209,88,.16)',desc:'Which level and timeframe you entered on',tags:'level breakout zone',vars:[
+   {name:'Entry level',type:'single',opts:['Level 1','Level 2','Level 3']},
+   {name:'Timeframe',type:'single',opts:['5 min','10 min','15 min']},
+   {name:'Conviction',type:'scale',min:1,max:5}]},
+ {key:'scalp',name:'Scalper (M1 / M5)',icon:'⚡',bg:'rgba(255,214,10,.16)',desc:'Fast trades — session, spread and momentum',tags:'scalp fast m1 m5 spread',vars:[
+   {name:'Session',type:'single',opts:['Pre-market','Open','Midday','Close']},
+   {name:'Spread condition',type:'single',opts:['Tight','Normal','Wide']},
+   {name:'Momentum strength',type:'scale',min:1,max:5},
+   {name:'News within 15 min',type:'toggle'}]},
+ {key:'ict',name:'ICT / Smart Money',icon:'🧠',bg:'rgba(191,90,242,.16)',desc:'PD arrays, killzones and HTF bias',tags:'ict smart money fvg order block liquidity',vars:[
+   {name:'PD array',type:'single',opts:['FVG','Order block','Liquidity sweep','Breaker']},
+   {name:'Killzone',type:'single',opts:['London','NY AM','NY PM']},
+   {name:'HTF bias aligned',type:'toggle'},
+   {name:'Model confidence',type:'scale',min:1,max:5}]},
+ {key:'snd',name:'Supply & Demand',icon:'📦',bg:'rgba(64,200,224,.16)',desc:'Zone freshness, strength and confluence',tags:'supply demand zone swing',vars:[
+   {name:'Zone freshness',type:'single',opts:['Fresh (1st tap)','2nd tap','Stale']},
+   {name:'Zone strength',type:'scale',min:1,max:5},
+   {name:'Confluences',type:'multi',opts:['Trendline','Fibonacci','Round number','HTF zone']},
+   {name:'Planned R:R',type:'number'}]},
+ {key:'options',name:'Options Seller',icon:'🎲',bg:'rgba(10,132,255,.16)',desc:'Premium selling — IV, DTE and structure',tags:'options theta premium iv credit spread',vars:[
+   {name:'Structure',type:'single',opts:['Cash put','Covered call','Credit spread','Iron condor']},
+   {name:'IV rank',type:'number'},
+   {name:'Days to expiry',type:'number'},
+   {name:'Defined risk',type:'toggle'}]},
+ {key:'breakout',name:'Breakout Trader',icon:'🚀',bg:'rgba(48,209,88,.16)',desc:'Pattern, volume and retest discipline',tags:'breakout pattern volume retest',vars:[
+   {name:'Pattern',type:'single',opts:['Triangle','Flag','Range','Trendline']},
+   {name:'Volume confirmed',type:'toggle'},
+   {name:'Took the retest',type:'toggle'},
+   {name:'Conviction',type:'scale',min:1,max:5}]},
+ {key:'meanrev',name:'Mean Reversion',icon:'🔄',bg:'rgba(64,200,224,.16)',desc:'Distance from VWAP, RSI and exhaustion',tags:'mean reversion vwap rsi fade',vars:[
+   {name:'% from VWAP',type:'number'},
+   {name:'RSI zone',type:'single',opts:['Oversold <30','Neutral','Overbought >70']},
+   {name:'Exhaustion candle',type:'toggle'}]},
+ {key:'crypto',name:'Crypto Perps',icon:'🪙',bg:'rgba(255,214,10,.16)',desc:'Direction, leverage, funding and narrative',tags:'crypto perps leverage funding futures',vars:[
+   {name:'Direction',type:'single',opts:['Long','Short']},
+   {name:'Leverage',type:'number'},
+   {name:'Funding favourable',type:'toggle'},
+   {name:'Narrative driver',type:'multi',opts:['Listing','Unlock','ETF flow','Macro','Technical only']}]},
+ {key:'news',name:'News / Event Trader',icon:'📰',bg:'rgba(191,90,242,.16)',desc:'Event type, positioning and surprise size',tags:'news event earnings cpi fomc catalyst',vars:[
+   {name:'Event type',type:'single',opts:['Earnings','CPI / inflation','FOMC','Other']},
+   {name:'Direction taken',type:'single',opts:['Long','Short']},
+   {name:'Pre-positioned',type:'toggle'},
+   {name:'Surprise magnitude',type:'scale',min:1,max:5}]},
+ {key:'blank',name:'Build from scratch',icon:'✦',bg:'var(--surface-2)',desc:'Start empty and define your own variables',tags:'custom blank empty own',vars:[]}
+];
+
+var state={tplKey:null,name:'My Strategy',icon:'🎯',bg:'rgba(48,209,88,.16)',vars:[]};
+var sheetType=null,editIdx=null,scaleMin=1,scaleMax=5,optVals=[];
+
+function renderTpl(filter){
+  var list=document.getElementById('tplList');
+  var f=(filter||'').toLowerCase().trim();
+  var items=TEMPLATES.filter(function(t){return !f||t.name.toLowerCase().indexOf(f)>=0||t.tags.indexOf(f)>=0||t.desc.toLowerCase().indexOf(f)>=0;});
+  if(items.length===0){list.innerHTML='<div class="no-res">No template matches — try "Build from scratch".</div>';return;}
+  list.innerHTML=items.map(function(t){
+    var meta=t.vars.length?t.vars.length+' variables · '+t.vars.map(function(v){return v.name;}).join(' · '):'';
+    var sel=state.tplKey===t.key?' sel':'';
+    return '<div class="tpl'+sel+'" onclick="pickTpl(\''+t.key+'\')">'+
+      '<div class="tpl-ico" style="background:'+t.bg+'">'+t.icon+'</div>'+
+      '<div class="tpl-body"><div class="tpl-name">'+t.name+'</div><div class="tpl-desc">'+t.desc+'</div>'+(meta?'<div class="tpl-meta">'+meta+'</div>':'')+'</div>'+
+      '<div class="tpl-check"><svg viewBox="0 0 14 14" fill="none"><path d="M3 7l2.5 2.5L11 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>';
+  }).join('');
+}
+function filterTpl(v){renderTpl(v);}
+function pickTpl(key){state.tplKey=key;renderTpl(document.getElementById('tplSearch').value);document.getElementById('cta1').classList.remove('disabled');}
+function goVars(){
+  var t=TEMPLATES.filter(function(x){return x.key===state.tplKey;})[0];
+  state.name=t.name;state.icon=t.icon;state.bg=t.bg;
+  state.vars=JSON.parse(JSON.stringify(t.vars));
+  document.getElementById('stratName').textContent=t.name;
+  renderVars();switchScreen('s1','s2');
+}
+
+function renderTypeGrid(){
+  var g=document.getElementById('typeGrid');
+  var order=['single','multi','number','toggle','scale'];
+  var html=order.map(function(t){
+    var sel=sheetType===t?' sel':'';
+    var ico=TYPE_ICON[t].replace(/C/g,TYPE_COLOR[t]);
+    return '<div class="type-card'+sel+'" onclick="pickType(\''+t+'\')"><div class="t-ico" style="background:'+TYPE_BG[t]+'">'+ico+'</div><div class="t-name">'+TYPE_LABEL[t]+'</div><div class="t-ex">'+TYPE_EX[t]+'</div></div>';
+  }).join('');
+  html+='<div class="type-card" style="opacity:.4;pointer-events:none;border-style:dashed;"><div class="t-ico" style="background:var(--surface-3)"><svg viewBox="0 0 18 18" fill="none"><path d="M9 4v10M4 9h10" stroke="#9a9a9f" stroke-width="1.6" stroke-linecap="round"/></svg></div><div class="t-name" style="color:var(--txt-3)">5 types cover<br>every strategy</div></div>';
+  g.innerHTML=html;
+}
+
+function renderVars(){
+  var list=document.getElementById('varList');
+  if(state.vars.length===0){list.innerHTML='<div class="empty-note">No variables yet.<br>Add the first thing you want to track on every trade.</div>';}
+  else{
+    list.innerHTML=state.vars.map(function(v,i){
+      var ico=TYPE_ICON[v.type].replace(/C/g,TYPE_COLOR[v.type]);
+      var opts='';
+      if(v.type==='single'||v.type==='multi')opts='<div class="var-opts">'+v.opts.map(function(o){return '<span class="chip">'+o+'</span>';}).join('')+'</div>';
+      else if(v.type==='scale')opts='<div class="var-opts"><span class="chip">'+v.min+' - '+v.max+'</span></div>';
+      else if(v.type==='toggle')opts='<div class="var-opts"><span class="chip">Yes</span><span class="chip">No</span></div>';
+      else if(v.type==='number')opts='<div class="var-opts"><span class="chip">numeric</span></div>';
+      return '<div class="var-row" style="animation-delay:'+(i*.05)+'s" onclick="editVar('+i+')"><div class="var-ico" style="background:'+TYPE_BG[v.type]+'">'+ico+'</div><div class="var-info"><div class="var-name">'+v.name+'</div><div class="var-type">'+TYPE_LABEL[v.type]+'</div>'+opts+'</div><div class="var-drag"><span></span><span></span><span></span></div></div>';
+    }).join('');
+  }
+  document.getElementById('capWarn').style.display=state.vars.length>=6?'flex':'none';
+}
+
+function openSheet(){
+  editIdx=null;sheetType=null;scaleMin=1;scaleMax=5;optVals=[];
+  document.getElementById('sheetH').textContent='Add a variable';
+  document.getElementById('vName').value='';
+  document.getElementById('cfg').innerHTML='';
+  document.getElementById('sheetBtn').textContent='Add variable';
+  renderTypeGrid();validateSheet();openS();
+}
+function editVar(i){
+  var v=state.vars[i];editIdx=i;sheetType=v.type;
+  document.getElementById('sheetH').textContent='Edit variable';
+  document.getElementById('vName').value=v.name;
+  if(v.type==='scale'){scaleMin=v.min;scaleMax=v.max;}
+  if(v.type==='single'||v.type==='multi')optVals=v.opts.slice();
+  renderTypeGrid();renderCfg();
+  document.getElementById('sheetBtn').textContent='Save changes';
+  validateSheet();openS();
+}
+function openS(){document.getElementById('scrim').classList.add('open');document.getElementById('sheet').classList.add('open');document.getElementById('sheet').scrollTop=0;}
+function closeSheet(){document.getElementById('scrim').classList.remove('open');document.getElementById('sheet').classList.remove('open');}
+
+function pickType(t){
+  sheetType=t;
+  if((t==='single'||t==='multi')&&optVals.length<2)optVals=['',''];
+  renderTypeGrid();renderCfg();validateSheet();
+}
+
+function renderCfg(){
+  var cfg=document.getElementById('cfg');
+  var html='';
+  if(sheetType==='single'||sheetType==='multi'){
+    html='<div class="field-lbl">Options</div><div id="optEdit"></div><div class="opt-add" onclick="addOpt()"><svg viewBox="0 0 15 15" fill="none"><path d="M7.5 2v11M2 7.5h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Add option</div>';
+  }else if(sheetType==='scale'){
+    html='<div class="field-lbl">Rating range</div><div class="scale-row"><input class="input" id="sMin" type="number" value="'+scaleMin+'" oninput="updScale()"><input class="input" id="sMax" type="number" value="'+scaleMax+'" oninput="updScale()"></div><div class="scale-prev" id="scalePrev"></div>';
+  }else if(sheetType==='toggle'){
+    html='<div class="field-lbl">Preview</div><div class="toggle-prev"><span>Yes / No switch</span><div class="tg"></div></div>';
+  }else if(sheetType==='number'){
+    html='<div class="field-lbl">Preview</div><div class="num-prev"><span>You will type a value</span><b>2.5</b></div>';
+  }
+  if(sheetType){
+    html+='<div class="hint"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M8 7v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="8" cy="4.6" r="1" fill="currentColor"/></svg><p>'+TYPE_UNLOCK[sheetType]+'</p></div>';
+  }
+  cfg.innerHTML=html;
+  if(sheetType==='single'||sheetType==='multi')renderOpts();
+  if(sheetType==='scale')updScale();
+}
+
+function renderOpts(){
+  var box=document.getElementById('optEdit');
+  if(!box)return;
+  box.innerHTML=optVals.map(function(o,i){return '<div class="opt-item"><input class="input" value="'+(o||'').replace(/"/g,'&quot;')+'" placeholder="Option '+(i+1)+'" oninput="optChange('+i+',this.value)"><div class="opt-del" onclick="delOpt('+i+')">&minus;</div></div>';}).join('');
+}
+function optChange(i,v){optVals[i]=v;validateSheet();}
+function addOpt(){optVals.push('');renderOpts();validateSheet();}
+function delOpt(i){if(optVals.length<=2)return;optVals.splice(i,1);renderOpts();validateSheet();}
+
+function updScale(){
+  var mn=document.getElementById('sMin'),mx=document.getElementById('sMax');
+  if(mn)scaleMin=parseInt(mn.value,10)||1;
+  if(mx)scaleMax=parseInt(mx.value,10)||5;
+  var prev=document.getElementById('scalePrev');if(!prev)return;
+  var lo=Math.min(scaleMin,scaleMax),hi=Math.max(scaleMin,scaleMax),h='';
+  if(hi-lo<=9&&hi-lo>=0)for(var n=lo;n<=hi;n++)h+='<span>'+n+'</span>';
+  prev.innerHTML=h;validateSheet();
+}
+
+function validateSheet(){
+  var name=document.getElementById('vName').value.trim();
+  var ok=name.length>0&&!!sheetType;
+  if(sheetType==='single'||sheetType==='multi')ok=ok&&optVals.filter(function(o){return o.trim();}).length>=2;
+  document.getElementById('sheetBtn').classList.toggle('disabled',!ok);
+}
+
+function saveVar(){
+  var name=document.getElementById('vName').value.trim();
+  var v={name:name,type:sheetType};
+  if(sheetType==='single'||sheetType==='multi')v.opts=optVals.filter(function(o){return o.trim();});
+  if(sheetType==='scale'){v.min=Math.min(scaleMin,scaleMax);v.max=Math.max(scaleMin,scaleMax);}
+  if(editIdx!==null)state.vars[editIdx]=v;else state.vars.push(v);
+  renderVars();closeSheet();
+}
+
+function buildInsight(){
+  var v=state.vars.filter(function(x){return x.type==='single';})[0]||state.vars.filter(function(x){return x.type==='scale';})[0]||state.vars.filter(function(x){return x.type==='toggle';})[0]||state.vars[0];
+  if(!v)return 'Log a few trades and you will start seeing which choices actually win for you.';
+  var detail;
+  if(v.type==='single'){var best=v.opts[v.opts.length-1];detail='<b>"'+v.name+': '+best+'" has been your strongest — 64% win-rate over 11 trades';}
+  else if(v.type==='scale'){detail='<b>trades you rated '+v.max+'/'+v.max+' on "'+v.name+'" win 71% of the time';}
+  else if(v.type==='toggle'){detail='<b>your win-rate jumps from 42% to 68% when "'+v.name+'" is on';}
+  else if(v.type==='multi'){detail='<b>setups including "'+v.opts[0]+'" outperform the rest by +1.3R';}
+  else {detail='<b>your best range of "'+v.name+'" wins far more than the rest';}
+  return 'After ~10 trades you will see things like: '+detail+'.</b> Generated entirely from your own variables.';
+}
+function goReview(){
+  if(state.vars.length===0){toast('Add at least one variable');return;}
+  document.getElementById('revName').textContent=state.name;
+  document.getElementById('revCount').textContent=state.vars.length+(state.vars.length===1?' variable':' variables')+' tracked';
+  var ri=document.getElementById('revIco');ri.textContent=state.icon;ri.style.background=state.bg;
+  document.getElementById('revVars').innerHTML=state.vars.map(function(v){
+    var ico=TYPE_ICON[v.type].replace(/C/g,TYPE_COLOR[v.type]);var d=TYPE_LABEL[v.type];
+    if(v.type==='single'||v.type==='multi')d+=' · '+v.opts.join(', ');
+    else if(v.type==='scale')d+=' · '+v.min+'-'+v.max;
+    return '<div class="sc-var"><div class="sc-vico" style="background:'+TYPE_BG[v.type]+'">'+ico+'</div><div><div class="sc-vname">'+v.name+'</div><div class="sc-vtype">'+d+'</div></div></div>';
+  }).join('');
+  document.getElementById('insightText').innerHTML=buildInsight();
+  switchScreen('s2','s3');
+}
+
+function finish(){toast('Strategy activated');setTimeout(function(){switchScreen('s3','s1');resetAll();},1400);}
+function resetAll(){
+  state={tplKey:null,name:'My Strategy',icon:'🎯',bg:'rgba(48,209,88,.16)',vars:[]};
+  document.getElementById('cta1').classList.add('disabled');
+  document.getElementById('tplSearch').value='';renderTpl('');
+}
+
+function switchScreen(from,to){
+  var f=document.getElementById(from),t=document.getElementById(to);
+  f.classList.add('exit-left');f.classList.remove('active');
+  setTimeout(function(){f.classList.remove('exit-left');},420);
+  t.classList.add('active');
+}
+function back(from,to){
+  var f=document.getElementById('s'+from),t=document.getElementById('s'+to);
+  f.classList.remove('active');f.style.transform='translateX(30px)';
+  setTimeout(function(){f.style.transform='';},420);
+  t.classList.remove('exit-left');t.classList.add('active');
+}
+function toast(msg){var el=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;el.classList.add('show');setTimeout(function(){el.classList.remove('show');},1600);}
+
+renderTpl('');
+</script>
+</body>
+</html>

@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M7 — AI Coach · UI Screen Mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0D1B2A; --navy:#1F3A5F; --paper:#F4F6F9; --surface:#fff;
+  --line:#DCE3EA; --line-soft:#EDF1F5;
+  --text:#16202B; --muted:#5D6B7A; --faint:#8C99A6;
+  --action:#1E6FA8; --action-dark:#175A88; --action-soft:#E8F1F8;
+  --profit:#0F6E56; --profit-soft:#E4F4EE;
+  --loss:#A8341A; --loss-soft:#FBEBE6;
+  --warn:#8A6A00; --warn-soft:#FBF3DC;
+  --r:10px; --rs:7px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:15px;line-height:1.55;}
+.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+h1,h2,h3,h4{margin:0;line-height:1.25;font-weight:600}
+a{color:var(--action)}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--action);outline-offset:2px;border-radius:4px}
+
+.topbar{position:sticky;top:0;z-index:50;background:var(--ink);color:#fff;
+  padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  border-bottom:1px solid #0a1420}
+.topbar .brand{font-weight:700;letter-spacing:-.01em;font-size:16px}
+.topbar .tag{font-size:11px;padding:3px 7px;border-radius:5px;background:#1E3549;color:#9FC4E0;letter-spacing:.06em}
+.topbar .sub{color:#93A7B8;font-size:13px;flex:1;min-width:180px}
+.topbar .legend{display:flex;gap:12px;font-size:11.5px;color:#93A7B8;flex-wrap:wrap}
+.topbar .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+
+.shell{display:flex;align-items:flex-start;gap:24px;max-width:1500px;margin:0 auto;padding:24px 20px 80px}
+.rail{position:sticky;top:74px;width:238px;flex:0 0 238px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);padding:10px;max-height:calc(100vh - 100px);overflow:auto}
+.rail h4{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);
+  padding:6px 8px 8px}
+.rail a{display:flex;gap:9px;align-items:baseline;padding:7px 9px;border-radius:var(--rs);
+  text-decoration:none;color:var(--text);font-size:13.5px}
+.rail a:hover{background:var(--paper)}
+.rail a .n{font-size:10.5px;color:var(--faint);letter-spacing:.02em}
+main{flex:1;min-width:0;display:flex;flex-direction:column;gap:22px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.card-head{padding:16px 18px 14px;border-bottom:1px solid var(--line-soft)}
+.card-head .idline{display:flex;align-items:center;gap:10px;margin-bottom:5px;flex-wrap:wrap}
+.card-head .sid{font-size:11px;font-weight:700;color:var(--action);background:var(--action-soft);
+  padding:2px 7px;border-radius:5px;letter-spacing:.04em}
+.card-head h2{font-size:16.5px}
+.card-head .purpose{margin:0;color:var(--muted);font-size:13.5px;max-width:70ch}
+.card-tools{display:flex;gap:14px;justify-content:space-between;align-items:center;
+  padding:10px 18px;background:#FAFBFC;border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
+.seg{display:flex;gap:3px;background:#EBEFF3;padding:3px;border-radius:8px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;color:var(--muted);font-size:11.5px;font-weight:500;
+  padding:5px 10px;border-radius:6px;letter-spacing:.02em}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);
+  box-shadow:0 1px 2px rgba(13,27,42,.13);font-weight:600}
+.tool-lab{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-right:2px;align-self:center}
+
+.stage{padding:22px 18px;background:
+  linear-gradient(0deg,rgba(13,27,42,.025),rgba(13,27,42,.025)),var(--surface);
+  display:flex;justify-content:center}
+.frame{width:100%;max-width:980px;transition:max-width .18s ease}
+.stage[data-vp="mobile"] .frame{max-width:378px}
+.app{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;box-shadow:0 1px 3px rgba(13,27,42,.06)}
+
+.notes{border-top:1px solid var(--line-soft);padding:14px 18px 16px;background:#FBFCFD}
+.notes h5{margin:0 0 7px;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+.notes ul{margin:0 0 12px;padding-left:17px;color:var(--muted);font-size:13px}
+.notes ul:last-child{margin-bottom:0}
+.notes li{margin-bottom:3px}
+.notes .k{color:var(--text);font-weight:600}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:11px;padding:3px 8px;border-radius:20px;background:var(--paper);
+  border:1px solid var(--line);color:var(--muted)}
+
+.scr{padding:26px 24px}
+.scr h3{font-size:20px;letter-spacing:-.015em;margin-bottom:5px}
+.scr .lede{color:var(--muted);font-size:13.5px;margin:0 0 20px}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px}
+.input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:var(--rs);
+  background:var(--surface);font-size:14px;color:var(--text)}
+.input::placeholder{color:var(--faint)}
+.input:focus{outline:none;border-color:var(--action);box-shadow:0 0 0 3px rgba(30,111,168,.13)}
+.hint{font-size:11.5px;color:var(--faint);margin-top:5px}
+
+.btn{width:100%;padding:11px 14px;border-radius:var(--rs);border:1px solid transparent;
+  font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:var(--action);color:#fff}
+.btn-primary:hover{background:var(--action-dark)}
+.btn-ghost{background:var(--surface);border-color:var(--line);color:var(--text)}
+.btn-ghost:hover{background:var(--paper)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn-row{display:flex;gap:10px}
+.btn-sm{width:auto;padding:7px 12px;font-size:12.5px}
+
+.banner{display:flex;gap:10px;padding:11px 13px;border-radius:var(--rs);font-size:13px;
+  margin-bottom:16px;align-items:flex-start;line-height:1.45}
+.banner b{display:block;margin-bottom:1px}
+.b-err{background:var(--loss-soft);color:#7d2612;border:1px solid #f0cdc2}
+.b-ok{background:var(--profit-soft);color:#0a5442;border:1px solid #bfe3d7}
+.b-warn{background:var(--warn-soft);color:#6B5200;border:1px solid #ecd9a4}
+.b-info{background:var(--action-soft);color:#155580;border:1px solid #c9e0f0}
+
+.pane{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 17px;margin-bottom:14px}
+.pane h4{font-size:14px;margin-bottom:3px}
+.pane .sub{color:var(--muted);font-size:12.5px;margin:0 0 13px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.row:last-child{border-bottom:0;padding-bottom:0}
+.row .l{font-size:13.5px;font-weight:500}
+.row .d{font-size:12px;color:var(--faint);margin-top:1px}
+.badge{font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:5px;letter-spacing:.03em}
+.bg-ok{background:var(--profit-soft);color:var(--profit)}
+.bg-warn{background:var(--warn-soft);color:var(--warn)}
+.bg-err{background:var(--loss-soft);color:var(--loss)}
+.bg-off{background:var(--paper);color:var(--muted);border:1px solid var(--line)}
+
+.empty{text-align:center;padding:34px 10px;color:var(--muted)}
+.empty .ico{width:42px;height:42px;border-radius:11px;background:var(--paper);border:1px solid var(--line);
+  display:grid;place-items:center;margin:0 auto 12px;font-size:19px}
+
+/* stat tiles */
+.statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stage[data-vp="mobile"] .statgrid{grid-template-columns:1fr 1fr}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);padding:12px 13px}
+.stat .n{font-size:19px;font-weight:700;font-family:"JetBrains Mono",monospace}
+.stat .l{font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.pl-pos{color:var(--profit)}
+.pl-neg{color:var(--loss)}
+
+/* chip-select (single or multi toggle) */
+.chipsel{display:flex;flex-wrap:wrap;gap:8px}
+.chipsel button{padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--surface);
+  font-size:12.5px;color:var(--muted);font-weight:500}
+.chipsel button.on{background:var(--action-soft);border-color:var(--action);color:var(--action-dark);font-weight:700}
+
+/* toggle switch */
+.toggle{position:relative;width:42px;height:23px;background:#E3E8ED;border-radius:14px;display:inline-block;flex:0 0 auto}
+.toggle.on{background:var(--action)}
+.toggle .knob{position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#fff}
+.toggle.on .knob{left:22px}
+.togglerow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+/* ---- M7-specific: insight feed ---- */
+.insight-card{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);
+  padding:14px 15px;margin-bottom:11px}
+.insight-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px}
+.kind-tag{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:5px;letter-spacing:.03em}
+.kind-risk{background:var(--loss-soft);color:var(--loss)}
+.kind-pattern{background:var(--action-soft);color:var(--action-dark)}
+.kind-improve{background:var(--profit-soft);color:var(--profit)}
+.insight-card h4{font-size:14.5px;margin-bottom:5px}
+.insight-card p{margin:0 0 10px;font-size:13px;color:var(--muted);line-height:1.5}
+.insight-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.insight-foot .meta{font-size:11.5px;color:var(--faint)}
+.insight-foot .acts{display:flex;gap:8px}
+
+/* ---- M7-specific: evidence rows ---- */
+.ev-row{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:9px 0;border-bottom:1px solid var(--line-soft);font-size:13px}
+.ev-row:last-child{border-bottom:0}
+.ev-row .l{display:flex;gap:8px;align-items:baseline}
+.ev-row .sym{font-weight:600}
+.ev-row .d{color:var(--faint);font-size:11.5px}
+.ev-chip{font-size:11px;padding:3px 8px;border-radius:20px;background:var(--paper);
+  border:1px solid var(--line);color:var(--muted);text-decoration:none;font-family:"JetBrains Mono",monospace}
+.ev-chip:hover{border-color:var(--action);color:var(--action-dark)}
+
+/* ---- M7-specific: narrative review ---- */
+.snapgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.stage[data-vp="mobile"] .snapgrid{grid-template-columns:1fr 1fr}
+.snap{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);padding:10px 11px;text-align:center}
+.snap .n{font-size:16px;font-weight:700;font-family:"JetBrains Mono",monospace}
+.snap .l{font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.narrative p{margin:0 0 12px;font-size:13.5px;color:var(--text);line-height:1.65}
+.stat-pill{background:var(--action-soft);color:var(--action-dark);padding:1px 6px;border-radius:5px;
+  font-family:"JetBrains Mono",monospace;font-weight:700;font-size:12.5px}
+
+/* ---- M7-specific: chat ---- */
+.chat-thread{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.msg{max-width:84%;padding:10px 13px;border-radius:12px;font-size:13.5px;line-height:1.55}
+.msg-user{align-self:flex-end;background:var(--action);color:#fff;border-bottom-right-radius:4px}
+.msg-coach{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:4px;max-width:92%}
+.msg-evidence{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.chatbar{display:flex;gap:8px}
+.chatbar .input{flex:1}
+.starter{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.starter button{text-align:left}
+
+/* ---- M7-specific: coach settings ---- */
+.muted-row{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:10px 0;border-bottom:1px solid var(--line-soft)}
+.muted-row:last-child{border-bottom:0}
+.muted-row .l{font-size:13px;font-weight:500}
+.muted-row .d{font-size:11.5px;color:var(--faint);margin-top:1px}
+
+/* responsive */
+@media(max-width:960px){
+  .shell{flex-direction:column;padding:16px 14px 60px;gap:14px}
+  .rail{position:static;width:100%;flex:none;max-height:none;display:flex;gap:6px;overflow-x:auto;padding:8px}
+  .rail h4{display:none}
+  .rail a{white-space:nowrap;background:var(--paper);border:1px solid var(--line)}
+  .stage{padding:16px 12px}
+  .card-tools{gap:10px}
+  .statgrid{grid-template-columns:1fr 1fr}
+  .snapgrid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){
+  .scr{padding:20px 16px}
+  .topbar .legend{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="brand">Trading Journal</span>
+  <span class="tag mono">M7</span>
+  <span class="sub">AI Coach — UI screen mockups · v1.0</span>
+  <span class="legend">
+    <span><i style="background:#1E6FA8"></i>pattern</span>
+    <span><i style="background:#0F6E56"></i>improvement</span>
+    <span><i style="background:#A8341A"></i>risk flag</span>
+  </span>
+</header>
+
+<div class="shell">
+  <nav class="rail" aria-label="Screen index">
+    <h4>Screens</h4>
+    <a href="#M7-S01"><span class="n mono">S01</span> Insight feed</a>
+    <a href="#M7-S02"><span class="n mono">S02</span> Insight detail</a>
+    <a href="#M7-S03"><span class="n mono">S03</span> Weekly / monthly review</a>
+    <a href="#M7-S04"><span class="n mono">S04</span> Ask the coach</a>
+    <a href="#M7-S05"><span class="n mono">S05</span> Coach settings</a>
+  </nav>
+
+  <main>
+
+  <!-- ================= S01 ================= -->
+  <section class="card" id="M7-S01" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M7-S01</span><h2>Insight feed</h2></div>
+      <p class="purpose">The home screen of the AI Coach — a feed of pattern-based insights grounded in a trader's own M3 facts and M5 journal entries, regenerated on a cadence rather than computed live (Figure 7.1).</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="empty" aria-pressed="false">Empty</button>
+        <button data-set="default" aria-pressed="true">Has insights</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <h3>Coach</h3>
+        <p class="lede">Insights refresh weekly · last updated 2 days ago</p>
+
+        <div data-when="empty">
+          <div class="empty">
+            <div class="ico">🧭</div>
+            <div style="font-size:13.5px;font-weight:600;color:var(--text)">No insights yet</div>
+            <div style="font-size:12.5px;color:var(--faint);margin-top:3px">Insights need a few weeks of trade and journal history before a pattern is reliable enough to surface.</div>
+          </div>
+        </div>
+
+        <div data-when="default">
+          <div class="insight-card">
+            <div class="insight-top"><span class="kind-tag kind-risk">Risk flag</span><span class="badge bg-warn">Medium confidence</span></div>
+            <h4>You size up after a loss</h4>
+            <p>In the last 30 days, position size increased in 8 of 11 trades placed within an hour of a loss — those trades win 34% less often than your normal average.</p>
+            <div class="insight-foot">
+              <span class="meta">based on 11 trades · generated 2 days ago</span>
+              <div class="acts"><button class="btn btn-ghost btn-sm">Dismiss</button><a href="#M7-S02" class="btn btn-primary btn-sm" style="text-decoration:none">View evidence →</a></div>
+            </div>
+          </div>
+          <div class="insight-card">
+            <div class="insight-top"><span class="kind-tag kind-pattern">Pattern</span><span class="badge bg-ok">High confidence</span></div>
+            <h4>London session is your strongest</h4>
+            <p>Trades opened during the London session carry a 2.4R average outcome versus 1.1R everywhere else, across every strategy you run.</p>
+            <div class="insight-foot">
+              <span class="meta">based on 26 trades · generated 2 days ago</span>
+              <div class="acts"><button class="btn btn-ghost btn-sm">Dismiss</button><a href="#M7-S02" class="btn btn-primary btn-sm" style="text-decoration:none">View evidence →</a></div>
+            </div>
+          </div>
+          <div class="insight-card">
+            <div class="insight-top"><span class="kind-tag kind-improve">Improvement</span><span class="badge bg-ok">High confidence</span></div>
+            <h4>Checklist adherence is paying off</h4>
+            <p>Trades logged with full checklist completion have a 71% win rate, up from 52% three months ago — the gap has widened for two straight months.</p>
+            <div class="insight-foot">
+              <span class="meta">based on 44 trades · generated 2 days ago</span>
+              <div class="acts"><button class="btn btn-ghost btn-sm">Dismiss</button><a href="#M7-S02" class="btn btn-primary btn-sm" style="text-decoration:none">View evidence →</a></div>
+            </div>
+          </div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Insight card</span> — kind tag, confidence badge, headline and a one-sentence summary; the full narrative and evidence trail live on the detail screen (M7-S02), not here.</li>
+        <li>Confidence reflects sample size and consistency, not sentiment — a Risk flag can carry high or low confidence just like a Pattern can.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>Insights regenerate on a fixed cadence (Section 4.1), not on every page load — this feed is a read of the latest generation run, never a live computation.</li>
+        <li>Dismissing an insight here removes only that instance; muting the underlying pattern type happens on the detail screen or in settings (M7-S05).</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-01</span><span class="chip mono">US-02</span><span class="chip mono">US-03</span><span class="chip">reads M3 + M5, writes Insight status</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S02 ================= -->
+  <section class="card" id="M7-S02" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M7-S02</span><h2>Insight detail</h2></div>
+      <p class="purpose">Every claim the coach makes traces back to specific trades — this is the evidence trail behind a single insight, frozen at the moment it was generated (Figure 7.1).</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="default" aria-pressed="true">Active</button>
+        <button data-set="dismissed" aria-pressed="false">Dismissed</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <div class="insight-top"><span class="kind-tag kind-risk">Risk flag</span><span class="badge bg-warn">Medium confidence</span></div>
+        <h3>You size up after a loss</h3>
+        <p class="lede">Generated Jul 21, 2026 · covers the last 90 days</p>
+
+        <div data-when="dismissed" class="banner b-warn"><span>🔕</span><span><b>Dismissed</b>You won't see this insight again, and similar "sizing after a loss" patterns are muted for 90 days.</span></div>
+
+        <div class="narrative">
+          <p>Across your last 90 days, 11 trades were opened within 60 minutes of a losing trade. In 8 of those, position size was larger than your account's rolling average size. Those 8 oversized trades won 3 times; the 3 sized normally won 2 times — a gap worth watching, though the sample is still small enough to keep this at medium confidence.</p>
+        </div>
+
+        <div class="pane">
+          <h4>Evidence — 11 trades</h4>
+          <p class="sub">Frozen at generation time · a later edit to any trade below won't silently change this text</p>
+          <div class="ev-row"><div class="l"><span class="sym">ES</span><span class="d">Mar 3, 14:20</span></div><a href="#" class="ev-chip">+40% size · loss</a></div>
+          <div class="ev-row"><div class="l"><span class="sym">GOLD</span><span class="d">Mar 5, 09:10</span></div><a href="#" class="ev-chip">+25% size · win</a></div>
+          <div class="ev-row"><div class="l"><span class="sym">NQ</span><span class="d">Mar 9, 11:45</span></div><a href="#" class="ev-chip">+55% size · loss</a></div>
+          <div class="ev-row"><div class="l"><span class="sym">EURUSD</span><span class="d">Mar 14, 08:05</span></div><a href="#" class="ev-chip">+30% size · loss</a></div>
+          <div class="ev-row"><div class="l" style="color:var(--faint)">+ 7 more trades</div></div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-ghost" data-when="default">Mute this pattern</button>
+          <button class="btn btn-ghost" data-when="default">Dismiss</button>
+          <button class="btn btn-primary">Save to next review</button>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Evidence row</span> — an EvidenceLink joining this Insight to one of M3's Trade facts, plus whatever M5 journal fields were relevant; each row opens that trade's full detail in M5-S04.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>An insight's evidence list is frozen at generation time (Section 4.2) — if a trade is edited afterward in M5, the insight isn't silently rewritten; it's picked up in the next generation cycle instead.</li>
+        <li>Muting a pattern type is broader than dismissing one insight — it suppresses every future insight of that kind for a fixed window (Section 4.3), configurable in M7-S05.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-04</span><span class="chip mono">US-05</span><span class="chip">reads M3 + M5 evidence, writes Insight status</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S03 ================= -->
+  <section class="card" id="M7-S03" data-state="weekly">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M7-S03</span><h2>Weekly / monthly review</h2></div>
+      <p class="purpose">A written narrative review generated on a cadence, grounded in a frozen stat snapshot for that period so the story never drifts from the numbers it describes.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">Period</span>
+        <button data-set="weekly" aria-pressed="true">Weekly</button>
+        <button data-set="monthly" aria-pressed="false">Monthly</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <div data-when="weekly">
+          <h3>Week of Jul 13 – Jul 19</h3>
+          <p class="lede">Generated Jul 20, 2026 · based on a snapshot taken at that time</p>
+          <div class="snapgrid">
+            <div class="snap"><div class="n pl-pos">+$860</div><div class="l">P&amp;L</div></div>
+            <div class="snap"><div class="n">67%</div><div class="l">win rate</div></div>
+            <div class="snap"><div class="n">9</div><div class="l">trades</div></div>
+            <div class="snap"><div class="n">1.8R</div><div class="l">avg R</div></div>
+          </div>
+          <div class="narrative">
+            <p>This week you placed <span class="stat-pill">9 trades</span> across 3 strategies, finishing <span class="stat-pill">+$860</span> with a <span class="stat-pill">67% win rate</span> — your best week in six. Most of that came from the London killzone reversal setup, which alone accounted for +$610.</p>
+            <p>Two insights are worth a closer look: your sizing-after-a-loss pattern showed up twice, and your checklist adherence held at 91%, continuing a trend flagged last month.</p>
+            <p>Nothing here changes anything M3 already calculated — this is a summary of it, written out.</p>
+          </div>
+          <div class="pane">
+            <h4>Insights referenced this week</h4>
+            <div class="row"><span class="l">You size up after a loss</span><a href="#M7-S02" class="btn btn-ghost btn-sm" style="text-decoration:none">View →</a></div>
+            <div class="row"><span class="l">Checklist adherence is paying off</span><a href="#M7-S02" class="btn btn-ghost btn-sm" style="text-decoration:none">View →</a></div>
+          </div>
+        </div>
+        <div data-when="monthly">
+          <h3>June 2026</h3>
+          <p class="lede">Generated Jul 1, 2026 · based on a snapshot taken at that time</p>
+          <div class="snapgrid">
+            <div class="snap"><div class="n pl-pos">+$3,420</div><div class="l">P&amp;L</div></div>
+            <div class="snap"><div class="n">61%</div><div class="l">win rate</div></div>
+            <div class="snap"><div class="n">38</div><div class="l">trades</div></div>
+            <div class="snap"><div class="n">1.9R</div><div class="l">avg R</div></div>
+          </div>
+          <div class="narrative">
+            <p>June was your strongest month this quarter at <span class="stat-pill">+$3,420</span>, though it wasn't evenly spread — the first two weeks carried most of it while the last week was flat.</p>
+            <p>You retired the Gold NY session breakout strategy on Jun 22 after three straight losing weeks; the two strategies you kept both improved month over month.</p>
+          </div>
+          <div class="pane">
+            <h4>Insights referenced this month</h4>
+            <div class="row"><span class="l">London session is your strongest</span><a href="#M7-S02" class="btn btn-ghost btn-sm" style="text-decoration:none">View →</a></div>
+          </div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Stat snapshot</span> — a frozen copy of the relevant M3 figures taken at generation time, the same pattern M6 uses for a Report's view_snapshot, so re-reading an old review later shows the same numbers even if M3's live data has since moved on.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>A review is generated once per period on a fixed schedule, never on-demand per view (Section 9 covers what happens if a generation run fails).</li>
+        <li>A review may reference existing Insights but never invents a new claim that isn't already backed by one — Section on AI grounding.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-06</span><span class="chip mono">US-07</span><span class="chip">writes ReviewSummary</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S04 ================= -->
+  <section class="card" id="M7-S04" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M7-S04</span><h2>Ask the coach</h2></div>
+      <p class="purpose">A read-only Q&amp;A surface for a trader to ask about their own history in plain language — every answer cites the trades it's grounded in, and the coach says so when it doesn't have enough evidence (Figure 7.2).</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="empty" aria-pressed="false">New session</button>
+        <button data-set="default" aria-pressed="true">In conversation</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <h3>Ask the coach</h3>
+        <p class="lede">Answers are grounded in your own trades — nothing from anyone else.</p>
+
+        <div data-when="empty">
+          <div class="banner b-info"><span>💬</span><span>Ask me anything about your trading history. I can only see your own data — nothing from other traders, and I can't place or edit trades.</span></div>
+          <div class="starter">
+            <button class="btn btn-ghost">Why did I lose money last week?</button>
+            <button class="btn btn-ghost">Which strategy makes me the most?</button>
+            <button class="btn btn-ghost">Am I overtrading?</button>
+          </div>
+        </div>
+
+        <div data-when="default">
+          <div class="chat-thread">
+            <div class="msg msg-user">Why did I lose money last week?</div>
+            <div class="msg msg-coach">
+              Two trades account for most of it: a GOLD short on Tuesday (-$310) and an ES long on Thursday (-$240) — both were sized larger than your typical trade and both broke the stop-loss rule from your Scaled ES opening range checklist.
+              <div class="msg-evidence"><a href="#" class="ev-chip">GOLD · Tue · -$310</a><a href="#" class="ev-chip">ES · Thu · -$240</a></div>
+            </div>
+            <div class="msg msg-user">Is that a pattern?</div>
+            <div class="msg msg-coach">Not yet — that's only 2 trades, which isn't enough to call it a pattern. I'll keep watching; if it happens a few more times I'll raise it as an insight on your feed.</div>
+          </div>
+        </div>
+
+        <div class="chatbar">
+          <input class="input" placeholder="Ask about your trading history…" disabled>
+          <button class="btn btn-primary btn-sm" style="width:auto" disabled>Send</button>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Evidence chip under a coach message</span> — the same underlying concept as an insight's evidence trail (M7-S02), scoped to that one answer instead of a standing insight.</li>
+        <li>Starter prompts are suggestions only; a trader can type anything, but off-topic or non-trading questions get a plain "I can only help with your trading history" response.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>The coach never answers with a claim it can't ground in the trader's own M3/M4/M5 data — if it can't find a grounded answer, it says so rather than speculating (Section on AI grounding).</li>
+        <li>Chat is read-only end to end: it never creates or edits a trade, strategy, or journal entry, regardless of how the request is phrased.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-08</span><span class="chip mono">US-09</span><span class="chip">reads M3 + M4 + M5, writes ChatSession / ChatMessage only</span></div>
+    </div>
+  </section>
+
+  <!-- ================= S05 ================= -->
+  <section class="card" id="M7-S05" data-state="default">
+    <div class="card-head">
+      <div class="idline"><span class="sid mono">M7-S05</span><h2>Coach settings</h2></div>
+      <p class="purpose">How often the coach speaks up, and which patterns it's currently muted from raising again.</p>
+    </div>
+    <div class="card-tools">
+      <div class="seg" data-role="states"><span class="tool-lab">State</span>
+        <button data-set="default" aria-pressed="true">Default</button>
+        <button data-set="saved" aria-pressed="false">Saved</button>
+      </div>
+      <div class="seg" data-role="vp"><span class="tool-lab">View</span>
+        <button data-vp="mobile" aria-pressed="false">Mobile</button>
+        <button data-vp="desktop" aria-pressed="true">Desktop</button>
+      </div>
+    </div>
+    <div class="stage" data-vp="desktop">
+      <div class="frame"><div class="app"><div class="scr">
+        <h3>Coach settings</h3>
+        <p class="lede">Changes apply on the next generation cycle, never retroactively.</p>
+
+        <div data-when="saved" class="banner b-ok"><span>✅</span><span><b>Preferences saved</b>Takes effect on the next generation cycle.</span></div>
+
+        <div class="field"><label>Insight frequency</label>
+          <div class="chipsel"><button>Daily</button><button class="on">Weekly</button><button>Off</button></div>
+        </div>
+        <div class="field"><label>Review cadence</label>
+          <div class="chipsel"><button>Weekly only</button><button>Monthly only</button><button class="on">Both</button><button>Off</button></div>
+        </div>
+        <div class="field">
+          <div class="togglerow"><label style="margin:0">Include chat questions in my periodic review</label>
+            <span class="toggle on" data-standalone-toggle><span class="knob"></span></span>
+          </div>
+        </div>
+
+        <div class="pane">
+          <h4>Muted patterns</h4>
+          <p class="sub">Nothing is muted permanently — every mute has an expiry.</p>
+          <div class="muted-row">
+            <div><div class="l">Sizing after a loss</div><div class="d">muted until Oct 3, 2026</div></div>
+            <button class="btn btn-ghost btn-sm">Unmute</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary">Save preferences</button>
+      </div></div></div>
+    </div>
+    <div class="notes">
+      <h5>Elements</h5>
+      <ul>
+        <li><span class="k">Muted patterns list</span> — mirrors CoachPreference.topics_muted; each entry carries the expiry set when it was muted from an insight (M7-S02), not a permanent block.</li>
+      </ul>
+      <h5>Rules</h5>
+      <ul>
+        <li>Turning insight frequency to Off stops new Insight generation but never deletes existing ones — a trader's history stays intact and reachable.</li>
+        <li>Preference changes are never retroactive: an insight or review already generated doesn't get rewritten when a setting changes afterward.</li>
+      </ul>
+      <div class="chips"><span class="chip mono">US-10</span><span class="chip mono">US-11</span><span class="chip">writes CoachPreference</span></div>
+    </div>
+  </section>
+
+  </main>
+</div>
+
+<script>
+function applyState(card){
+  const state = card.dataset.state;
+  card.querySelectorAll('[data-when]').forEach(el=>{
+    const owner = el.closest('.card');
+    if(owner !== card) return;
+    const list = el.dataset.when.trim().split(/\s+/);
+    el.style.display = list.includes(state) ? '' : 'none';
+  });
+  card.querySelectorAll('[data-toggle-on]').forEach(el=>{
+    const owner = el.closest('.card');
+    if(owner !== card) return;
+    el.classList.toggle('on', el.dataset.toggleOn === state);
+  });
+}
+document.querySelectorAll('.card').forEach(card=>{
+  applyState(card);
+  const stateWrap = card.querySelector('[data-role="states"]');
+  if(stateWrap){
+    stateWrap.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        stateWrap.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false'));
+        btn.setAttribute('aria-pressed','true');
+        card.dataset.state = btn.dataset.set;
+        applyState(card);
+      });
+    });
+  }
+  const vpWrap = card.querySelector('[data-role="vp"]');
+  const stage  = card.querySelector('.stage');
+  if(vpWrap && stage){
+    vpWrap.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        vpWrap.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false'));
+        btn.setAttribute('aria-pressed','true');
+        stage.dataset.vp = btn.dataset.vp;
+      });
+    });
+  }
+});
+document.querySelectorAll('.chipsel').forEach(sel=>{
+  sel.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click',()=>{
+      b.classList.toggle('on');
+    });
+  });
+});
+document.querySelectorAll('.toggle[data-standalone-toggle]').forEach(t=>{
+  t.addEventListener('click',()=>{ t.classList.toggle('on'); });
+});
+</script>
+</body>
+</html>
