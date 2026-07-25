@@ -4,6 +4,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { track } from "@/lib/analytics";
 import { getAdminSupabase } from "@/lib/supabase/admin";
+import { sendPasswordChangedEmail } from "@/lib/email/resend";
 import {
   checkLockout,
   countRecentEvents,
@@ -11,6 +12,7 @@ import {
   getOrigin,
   recordAuthEvent,
 } from "@/lib/auth/lockout";
+import { getUserAgent } from "@/lib/auth/userAgent";
 
 const RESEND_COOLDOWN_MS = 60 * 1000;
 const RESEND_DAILY_LIMIT = 5;
@@ -65,6 +67,7 @@ export async function emailSignUpAction(email: string, password: string) {
       granted: true,
       source: "signup_checkbox",
     });
+    await admin.from("users").insert({ id: data.user.id });
     await recordAuthEvent({ userId: data.user.id, email, ip, eventType: "sign_up" });
   }
 
@@ -100,10 +103,27 @@ export async function emailSignInAction(email: string, password: string) {
     return { error: "Email or password is incorrect." };
   }
 
-  await recordAuthEvent({ userId: data.user.id, email, ip, eventType: "sign_in_success" });
+  const userAgent = await getUserAgent();
+  await recordAuthEvent({
+    userId: data.user.id,
+    email,
+    ip,
+    eventType: "sign_in_success",
+    metadata: { userAgent },
+  });
 
   if (!data.user.email_confirmed_at) {
     return { success: true, redirect: "/auth/verify" };
+  }
+
+  const { data: profile } = await supabase
+    .from("users")
+    .select("onboarded_at")
+    .eq("id", data.user.id)
+    .single();
+
+  if (!profile?.onboarded_at) {
+    return { success: true, redirect: "/onboarding" };
   }
 
   return { success: true, redirect: "/dashboard" };
@@ -191,6 +211,153 @@ export async function setNewPasswordAction(newPassword: string) {
     ip,
     eventType: "password_reset_completed",
   });
+
+  return { success: true };
+}
+
+export async function completeOnboardingAction(timezone: string, currency: string) {
+  const supabase = await getSupabase();
+
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData.user) {
+    return { error: "You need to be signed in to continue." };
+  }
+
+  const { error } = await supabase.from("users").upsert({
+    id: userData.user.id,
+    timezone,
+    display_currency: currency,
+    onboarded_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  });
+  if (error) {
+    return { error: "Couldn't save. Check your connection and try again." };
+  }
+
+  const ip = await getClientIp();
+  await recordAuthEvent({
+    userId: userData.user.id,
+    email: userData.user.email,
+    ip,
+    eventType: "onboarding_completed",
+  });
+
+  return { success: true };
+}
+
+export async function updateProfileAction(params: {
+  displayName: string;
+  timezone: string;
+  currency: string;
+}) {
+  const supabase = await getSupabase();
+
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData.user) {
+    return { error: "You need to be signed in." };
+  }
+
+  const { error } = await supabase
+    .from("users")
+    .update({
+      display_name: params.displayName,
+      timezone: params.timezone,
+      display_currency: params.currency,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", userData.user.id);
+
+  if (error) {
+    return { error: "Couldn't save. Check your connection and try again." };
+  }
+
+  return { success: true };
+}
+
+export async function changePasswordAction(currentPassword: string, newPassword: string) {
+  const supabase = await getSupabase();
+
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData.user?.email) {
+    return { error: "You need to be signed in to change your password." };
+  }
+
+  const { error: verifyError } = await supabase.auth.signInWithPassword({
+    email: userData.user.email,
+    password: currentPassword,
+  });
+  if (verifyError) {
+    return { error: "Current password is incorrect." };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) {
+    return { error: error.message };
+  }
+
+  const { data: sessionData } = await supabase.auth.getSession();
+  if (sessionData.session) {
+    const admin = getAdminSupabase();
+    await admin.auth.admin.signOut(sessionData.session.access_token, "others");
+  }
+
+  await sendPasswordChangedEmail(userData.user.email);
+
+  const ip = await getClientIp();
+  await recordAuthEvent({
+    userId: userData.user.id,
+    email: userData.user.email,
+    ip,
+    eventType: "password_changed",
+  });
+
+  return { success: true };
+}
+
+export async function signOutOtherSessionsAction() {
+  const supabase = await getSupabase();
+
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData.user) {
+    return { error: "You need to be signed in." };
+  }
+
+  const { data: sessionData } = await supabase.auth.getSession();
+  if (sessionData.session) {
+    const admin = getAdminSupabase();
+    await admin.auth.admin.signOut(sessionData.session.access_token, "others");
+  }
+
+  const ip = await getClientIp();
+  await recordAuthEvent({
+    userId: userData.user.id,
+    email: userData.user.email,
+    ip,
+    eventType: "sessions_revoked_others",
+  });
+
+  return { success: true };
+}
+
+export async function updateConsentAction(purpose: string, granted: boolean) {
+  const supabase = await getSupabase();
+
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData.user) {
+    return { error: "You need to be signed in." };
+  }
+
+  const admin = getAdminSupabase();
+  const { error } = await admin.from("consent_records").insert({
+    user_id: userData.user.id,
+    purpose,
+    granted,
+    source: "profile_settings",
+  });
+
+  if (error) {
+    return { error: "Couldn't save. Check your connection and try again." };
+  }
 
   return { success: true };
 }

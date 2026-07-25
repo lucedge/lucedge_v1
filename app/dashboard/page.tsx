@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
@@ -24,6 +25,16 @@ export default async function DashboardPage() {
     redirect("/auth/verify");
   }
 
+  const { data: profile } = await supabase
+    .from("users")
+    .select("onboarded_at")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile?.onboarded_at) {
+    redirect("/onboarding");
+  }
+
   return (
     <main
       style={{
@@ -41,6 +52,9 @@ export default async function DashboardPage() {
     >
       <h1 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-.02em" }}>You&apos;re signed in</h1>
       <p style={{ color: "var(--fg-3)", fontSize: 14 }}>{user.email}</p>
+      <Link href="/profile" style={{ color: "var(--brand-blue)", fontSize: 14 }}>
+        Profile & account
+      </Link>
       <form action={signOutThenRedirect}>
         <button
           type="submit"

@@ -22,6 +22,7 @@ function VerifyContent() {
   const [resending, setResending] = useState(false);
   const [message, setMessage] = useState("");
   const [cooldown, setCooldown] = useState(0);
+  const [continueTo, setContinueTo] = useState("/dashboard");
 
   useEffect(() => {
     const check = async () => {
@@ -30,14 +31,27 @@ function VerifyContent() {
         return;
       }
 
-      const { data: { user } } = await supabase().auth.getUser();
+      const client = supabase();
+      const { data: { user } } = await client.auth.getUser();
       if (!user) {
         setState("no-session");
         return;
       }
 
       setEmail(user.email ?? "");
-      setState(user.email_confirmed_at ? "verified" : "sent");
+
+      if (user.email_confirmed_at) {
+        const { data: profile } = await client
+          .from("users")
+          .select("onboarded_at")
+          .eq("id", user.id)
+          .single();
+        setContinueTo(profile?.onboarded_at ? "/dashboard" : "/onboarding");
+        setState("verified");
+        return;
+      }
+
+      setState("sent");
     };
 
     check();
@@ -130,7 +144,7 @@ function VerifyContent() {
         <>
           <h1 style={{ fontSize: 22, fontWeight: 700 }}>Email verified</h1>
           <p style={{ color: "var(--fg-3)", fontSize: 14 }}>You're all set.</p>
-          <button onClick={() => router.push("/dashboard")} style={ctaStyle}>
+          <button onClick={() => router.push(continueTo)} style={ctaStyle}>
             Continue to app
           </button>
         </>
