@@ -35,6 +35,18 @@ export default async function ProfilePage() {
     redirect("/onboarding");
   }
 
+  const { data: pendingDeletion } = await supabase
+    .from("data_requests")
+    .select("id")
+    .eq("type", "delete")
+    .eq("status", "pending")
+    .limit(1)
+    .maybeSingle();
+
+  if (pendingDeletion) {
+    redirect("/profile/delete");
+  }
+
   // Fetch a larger pool than we'll display, since deduping by device+IP
   // below can collapse many rows (e.g. repeated sign-ins from one laptop)
   // down to far fewer unique entries.

@@ -35,6 +35,18 @@ export default async function DashboardPage() {
     redirect("/onboarding");
   }
 
+  const { data: pendingDeletion } = await supabase
+    .from("data_requests")
+    .select("id")
+    .eq("type", "delete")
+    .eq("status", "pending")
+    .limit(1)
+    .maybeSingle();
+
+  if (pendingDeletion) {
+    redirect("/profile/delete");
+  }
+
   return (
     <main
       style={{

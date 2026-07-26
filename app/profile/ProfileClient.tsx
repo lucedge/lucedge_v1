@@ -74,6 +74,30 @@ export function ProfileClient({ email, displayName, timezone, currency, sessions
         <div style={{ height: 36 }} />
 
         <EmailPreferencesSection initialOptIn={marketingOptIn} />
+
+        <div style={{ height: 36 }} />
+
+        <section>
+          <h2 style={{ fontSize: 14, fontWeight: 600, color: "var(--loss)", marginBottom: 10 }}>Danger zone</h2>
+          <Link
+            href="/profile/delete"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              height: 40,
+              padding: "0 18px",
+              background: "transparent",
+              border: "1px solid var(--loss)",
+              borderRadius: "var(--radius-md)",
+              color: "var(--loss)",
+              fontSize: 14,
+              fontWeight: 600,
+              textDecoration: "none",
+            }}
+          >
+            Delete account
+          </Link>
+        </section>
       </div>
     </div>
   );

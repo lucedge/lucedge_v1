@@ -13,6 +13,7 @@ import {
   recordAuthEvent,
 } from "@/lib/auth/lockout";
 import { getUserAgent } from "@/lib/auth/userAgent";
+import { determinePostAuthRedirect } from "@/lib/auth/postAuthRedirect";
 
 const RESEND_COOLDOWN_MS = 60 * 1000;
 const RESEND_DAILY_LIMIT = 5;
@@ -112,21 +113,8 @@ export async function emailSignInAction(email: string, password: string) {
     metadata: { userAgent },
   });
 
-  if (!data.user.email_confirmed_at) {
-    return { success: true, redirect: "/auth/verify" };
-  }
-
-  const { data: profile } = await supabase
-    .from("users")
-    .select("onboarded_at")
-    .eq("id", data.user.id)
-    .single();
-
-  if (!profile?.onboarded_at) {
-    return { success: true, redirect: "/onboarding" };
-  }
-
-  return { success: true, redirect: "/dashboard" };
+  const redirect = await determinePostAuthRedirect(supabase, data.user.id, data.user.email_confirmed_at);
+  return { success: true, redirect };
 }
 
 export async function resendVerificationAction(email: string) {
@@ -360,4 +348,119 @@ export async function updateConsentAction(purpose: string, granted: boolean) {
   }
 
   return { success: true };
+}
+
+const DELETION_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
+
+export async function requestAccountDeletionAction() {
+  const supabase = await getSupabase();
+
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData.user) {
+    return { error: "You need to be signed in." };
+  }
+
+  const admin = getAdminSupabase();
+  const expiresAt = new Date(Date.now() + DELETION_GRACE_MS).toISOString();
+
+  const { error } = await admin.from("data_requests").insert({
+    user_id: userData.user.id,
+    type: "delete",
+    status: "pending",
+    expires_at: expiresAt,
+  });
+  if (error) {
+    return { error: "Couldn't schedule deletion. Please try again." };
+  }
+
+  // Kill every other session immediately ("access blocked"); the current
+  // one stays alive so a same-tab "restore" right after works without
+  // needing to sign in again.
+  const { data: sessionData } = await supabase.auth.getSession();
+  if (sessionData.session) {
+    await admin.auth.admin.signOut(sessionData.session.access_token, "others");
+  }
+
+  const ip = await getClientIp();
+  await recordAuthEvent({
+    userId: userData.user.id,
+    email: userData.user.email,
+    ip,
+    eventType: "deletion_requested",
+    metadata: { expiresAt },
+  });
+
+  return { success: true, expiresAt };
+}
+
+export async function restoreAccountAction() {
+  const supabase = await getSupabase();
+
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData.user) {
+    return { error: "You need to be signed in." };
+  }
+
+  const admin = getAdminSupabase();
+  const { data: pending } = await admin
+    .from("data_requests")
+    .select("id")
+    .eq("user_id", userData.user.id)
+    .eq("type", "delete")
+    .eq("status", "pending")
+    .order("requested_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!pending) {
+    return { error: "No pending deletion found." };
+  }
+
+  const { error: restoreError } = await admin
+    .from("data_requests")
+    .update({ status: "cancelled" })
+    .eq("id", pending.id);
+  if (restoreError) {
+    return { error: "Couldn't restore your account. Please try again." };
+  }
+
+  const ip = await getClientIp();
+  await recordAuthEvent({
+    userId: userData.user.id,
+    email: userData.user.email,
+    ip,
+    eventType: "deletion_cancelled",
+  });
+
+  return { success: true };
+}
+
+/**
+ * Performs the actual hard erasure for delete requests whose 30-day grace
+ * period has passed. Not wired to any UI or scheduler yet — deleting
+ * auth.users cascades through our FKs (users, consent_records,
+ * audit_events, data_requests) automatically. Whatever eventually calls
+ * this (pg_cron, a Supabase Edge Function, Vercel Cron) is a separate,
+ * later infra decision.
+ */
+export async function performScheduledErasureAction() {
+  const admin = getAdminSupabase();
+
+  const { data: due } = await admin
+    .from("data_requests")
+    .select("id, user_id")
+    .eq("type", "delete")
+    .eq("status", "pending")
+    .lte("expires_at", new Date().toISOString());
+
+  for (const request of due ?? []) {
+    const { error: deleteError } = await admin.auth.admin.deleteUser(request.user_id);
+    if (deleteError) continue;
+    await admin
+      .from("data_requests")
+      .update({ status: "completed", completed_at: new Date().toISOString() })
+      .eq("id", request.id);
+  }
+
+  return { processed: due?.length ?? 0 };
 }

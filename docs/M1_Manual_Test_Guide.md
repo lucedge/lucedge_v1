@@ -96,14 +96,30 @@ broken step — later steps often depend on earlier ones working.
 
 ---
 
+## Slice 4: Account Deletion (US-12 — request/restore only)
+
+**Note**: the automatic 30-day permanent erasure is NOT built — see
+`docs/M1_Remaining_Work.md`'s 🚩 flag. This slice only covers the
+request/restore flow, which is fully real.
+
+- [ ] `/profile` → "Danger zone" → "Delete account" → typing anything other than `DELETE` keeps the button disabled
+- [ ] Type `DELETE`, submit → shows "Scheduled for [date ~30 days out]" with a "Restore my account" button
+- [ ] Open a second browser/incognito signed into the same account → confirm it gets signed out after the deletion request
+- [ ] In the original (still-live) tab, click "Restore my account" → confirm it works and lands you back on `/dashboard`
+- [ ] Request deletion again, then sign out and sign back in (simulating a return visit) → confirm sign-in still succeeds (not blocked), and you land directly on `/profile/delete` showing "Scheduled," not `/dashboard`
+- [ ] While a deletion is pending, try navigating directly to `/dashboard` or `/profile` → both redirect to `/profile/delete` instead of rendering normally
+- [ ] Check `data_requests` in Supabase Studio → confirm the row's `status` goes `pending` → `cancelled` when restored
+
+---
+
 ## Not yet built — don't report these as bugs
 
 - Google sign-in button exists but isn't wired up (US-02, deferred)
-- Email change (part of US-08) — not built
-- Intro-slide "shown once" tracking (US-06) — currently shows every visit
+- Email change (part of US-08) — dropped, not needed (product decision, won't be built)
+- Intro-slide "shown once" tracking (US-06) — currently shows every visit (deferred until after M6/M7)
 - True per-session revoke by ID (US-10's literal spec ask) — not feasible on Supabase without relying on undocumented internals; see the simplified version above instead
-- Data export (US-11) — not built
-- Account deletion (US-12) — not built
+- Data export (US-11) — dropped, not needed for v1 (product decision)
+- Account deletion's automatic 30-day erasure — the request/restore flow is built (US-12), but nothing actually performs the permanent erasure yet; no scheduler wired up
 - "Keep me signed in" 15min/30-day split (US-14) — currently a flat session default
 - Full pixel-accurate visual match to `M1_UI_Mockups.html` — functional only so far
 

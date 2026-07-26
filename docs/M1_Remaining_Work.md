@@ -1,8 +1,9 @@
 # M1 — Identity, Onboarding & Account: Remaining Work
 
 Status as of this doc: US-01, US-03, US-04, US-05 (core auth), US-07,
-US-09 (onboarding, password change), and US-10/US-13 (sessions, email
-preferences — simplified, see note below) are fully built and functional.
+US-09 (onboarding, password change), US-10/US-13 (sessions, email
+preferences — simplified, see note below), and US-12 (account deletion —
+request/restore only, see flag below) are fully built and functional.
 US-08 is partially built — name/timezone/currency editing works, email
 change is deferred. Everything below is what's left against the full
 `M1_Identity_Module_Spec`.
@@ -24,7 +25,30 @@ The Sessions/Email-preferences slice (US-10/US-13, just built) also
 hasn't been through a full manual pass yet — see
 `docs/M1_Manual_Test_Guide.md` Slice 3 once it's added.
 
+Account deletion (US-12, just built) also hasn't been manually walked
+through yet.
+
 **Do not mark M1 done without circling back to these.**
+
+## 🚩 US-12's actual erasure is not automated — flagged for later
+
+Account deletion's *request* and *restore* flow is fully real and working
+(see "What's now built" below). The permanent, irreversible 30-day
+erasure is **not**. A function for it exists —
+`performScheduledErasureAction()` in `app/(auth)/actions.ts` — but nothing
+calls it. It needs a scheduler (Supabase `pg_cron`, a Supabase Edge
+Function on a timer, Vercel Cron, or similar) that doesn't exist in this
+project yet.
+
+This was deliberate, not an oversight: wiring an irreversible mass-delete
+action to a scheduler chosen in a rush felt riskier than leaving it
+disconnected until there's an actual deployment/hosting story to decide
+which scheduler fits. It's grouped with two other things needing the same
+kind of infra — see "Infra / background jobs" below.
+
+**Before this can be considered truly done**: decide on a scheduler,
+wire `performScheduledErasureAction()` to it, and test it against a real
+expired request (not just call it manually once).
 
 ## Note: US-10 was built differently than the spec literally asks for
 
@@ -40,14 +64,13 @@ within 60s" — implies per-session granularity we can't actually deliver).
 
 ## Stories not yet built
 
-| Story | What it needs | Screen |
-|---|---|---|
-| **US-02** Google OAuth | Google Cloud OAuth client + enable provider in Supabase (deferred by product decision) | — |
-| **US-06** Intro slides "shown once" | Currently shows every time an unauthenticated user lands on `/sign-up` — spec requires it be tracked so a user who's completed it never sees it again | S01 (exists, not spec-complete) |
-| **US-08** Email change (remainder) | Requires confirmation on both old and new address (Supabase's "secure email change" dashboard setting handles the dual-confirmation mechanics) | part of S07 — built, email change not added |
-| **US-11** Data export | JSON + CSV, 7-day expiring download link, background job | S09 — doesn't exist |
-| **US-12** Account deletion | Type-to-confirm, 30-day restorable grace period, immediate broker-connection revocation | S10 — doesn't exist |
-| **US-14** "Keep me signed in" | 15-minute access / 30-day refresh distinction, silent refresh — currently just Supabase's flat default session behavior | — |
+| Story | What it needs | Screen | Status |
+|---|---|---|---|
+| **US-02** Google OAuth | Google Cloud OAuth client + enable provider in Supabase | — | Deferred (product decision) |
+| **US-06** Intro slides "shown once" | Currently shows every time an unauthenticated user lands on `/sign-up` — spec requires it be tracked so a user who's completed it never sees it again | S01 (exists, not spec-complete) | Deferred until after M6/M7 (product decision) |
+| **US-08** Email change (remainder) | Requires confirmation on both old and new address | part of S07 — built, email change not added | **Dropped — not needed** (product decision) |
+| **US-11** Data export | JSON + CSV, 7-day expiring download link, background job | S09 — doesn't exist | **Dropped — not needed for v1** (product decision). Reconsider once M2/M3 exist and there's real trade/journal data worth exporting — right now it'd only cover profile + consent + sign-in history |
+| **US-14** "Keep me signed in" | 15-minute access / 30-day refresh distinction, silent refresh — currently just Supabase's flat default session behavior (everyone stays persistently signed in, no checkbox, no session-only option) | — | Deferred for later (product decision) |
 
 ## What's now built
 
@@ -68,19 +91,28 @@ within 60s" — implies per-session granularity we can't actually deliver).
     existing append-only `consent_records` table
 - Dashboard/verify/sign-in routing all gate correctly on onboarding
   completion, not just email verification
+- `/profile/delete` (M1-S10, US-12 — request/restore only, see 🚩 above):
+  type-to-confirm deletion request, 30-day grace period tracked via
+  `data_requests`, other-session revocation, app-level access blocking on
+  every protected page while a deletion is pending, and a same-session
+  restore path. The actual 30-day hard erasure is not automated (see
+  flag above).
 
 ## Underlying data model gap (remaining)
 
-`data_requests` table (US-11/US-12 job tracking) still doesn't exist. No
-gap remains for sessions — deliberately not building a real `sessions`
-table given the Supabase limitation above; the sign-in history reuses
+`data_requests` table now exists (built for US-12; would have been
+reused by US-11, but that's dropped for v1 — see table above). No gap
+remains for sessions — deliberately not building a real `sessions` table
+given the Supabase limitation above; the sign-in history reuses
 `audit_events`.
 
 ## Infra / background jobs (need a cron, none set up yet)
 
 - Auto-purge accounts stuck in `pending_verification` after 30 days
-- Deletion sweep: hard-erase after the 30-day grace period
-- Export file cleanup after 7 days
+- Deletion sweep: hard-erase after the 30-day grace period — the
+  function to call (`performScheduledErasureAction()`) already exists,
+  see 🚩 above; just needs a scheduler wired to it
+- ~~Export file cleanup after 7 days~~ — moot, US-11 dropped for v1
 
 ## Smaller open items
 
@@ -102,18 +134,16 @@ register, user-facing help articles — none written yet.
 
 ## Recommendation: what to build next
 
-**US-06 (intro-slide "shown once") + US-08 remainder (email change)** —
-both small, both close out stories that are otherwise done. US-06 is a
-one-field flag check; email change reuses Supabase's built-in
-dual-confirmation flow (same pattern as the SMTP/email-provider work
-already done), so it's mostly wiring, not new mechanics.
+US-06, US-08's email change, US-11 (export), and US-14 (keep signed in)
+are all deferred/dropped for now (see table above). US-12 (account
+deletion request/restore) is done, with the erasure-automation gap
+flagged separately. The only remaining open story is **US-02 (Google
+OAuth)** — plus, whenever it makes sense, deciding on and wiring up a
+scheduler to cover the two remaining deferred background jobs
+(unverified-account purge, deletion erasure).
 
-Runner-up candidates:
-- **Google OAuth (US-02)** — if reducing signup friction matters more
-  than closing out the smaller remaining stories.
-- **US-11/US-12 (export/deletion)** together — the biggest remaining
-  lift (new `data_requests` table, background jobs, 30-day sweep). Better
-  suited once more product modules exist and accounts actually accumulate
-  data worth exporting or deleting.
-- **US-14** (keep signed in) — a session/cookie config change more than a
-  UI feature; low effort but also low visibility.
+With US-02 also likely deferred until there's a real signup-friction
+reason to prioritize it, **M1 is functionally close to done** for what's
+actually being built in v1 — the main remaining work is the manual
+verification pass across all four built slices (flagged throughout this
+doc) plus the documentation deliverables at the bottom.
