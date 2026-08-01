@@ -1,0 +1,138 @@
+// Minimal subset of cTrader's Open API protobuf schema, used only for the
+// messages this app actually sends/receives (app auth, account auth, account
+// listing, historical deals). Field names/numbers/types are copied verbatim
+// from Spotware's official schema at
+// https://github.com/spotware/openapi-proto-messages (OpenApiCommonMessages,
+// OpenApiMessages, OpenApiModelMessages) rather than the full multi-file
+// schema, to avoid pulling in ~200 unrelated message types (live quotes,
+// order placement, etc.) this read-only integration never uses. If cTrader
+// adds required fields to any message used here, this file needs updating
+// to match — it is not auto-synced.
+
+syntax = "proto2";
+
+package ctrader;
+
+// --- Envelope (OpenApiCommonMessages.proto) ---
+
+message ProtoMessage {
+  required uint32 payloadType = 1;
+  optional bytes payload = 2;
+  optional string clientMsgId = 3;
+}
+
+message ProtoErrorRes {
+  optional uint32 payloadType = 1;
+  required string errorCode = 2;
+  optional string description = 3;
+}
+
+// --- App / account auth (OpenApiMessages.proto) ---
+
+message ProtoOAApplicationAuthReq {
+  required string clientId = 2;
+  required string clientSecret = 3;
+}
+
+message ProtoOAApplicationAuthRes {
+}
+
+message ProtoOAAccountAuthReq {
+  required int64 ctidTraderAccountId = 2;
+  required string accessToken = 3;
+}
+
+message ProtoOAAccountAuthRes {
+  required int64 ctidTraderAccountId = 2;
+}
+
+// --- Account listing (OpenApiMessages.proto / OpenApiModelMessages.proto) ---
+
+message ProtoOACtidTraderAccount {
+  required uint64 ctidTraderAccountId = 1;
+  optional bool isLive = 2;
+  optional int64 traderLogin = 3;
+}
+
+message ProtoOAGetAccountListByAccessTokenReq {
+  required string accessToken = 2;
+}
+
+message ProtoOAGetAccountListByAccessTokenRes {
+  optional string accessToken = 2;
+  // Field 3 is permissionScope (ProtoOAClientPermissionScope), unused here
+  // and deliberately omitted — protobuf safely skips unknown field numbers
+  // on decode, so omitting it doesn't affect reading field 4 below.
+  repeated ProtoOACtidTraderAccount ctidTraderAccount = 4;
+}
+
+// --- Deal history (OpenApiMessages.proto / OpenApiModelMessages.proto) ---
+
+message ProtoOAClosePositionDetail {
+  required double entryPrice = 1;
+  required int64 grossProfit = 2;
+  required int64 swap = 3;
+  required int64 commission = 4;
+  required int64 balance = 5;
+}
+
+enum ProtoOATradeSide {
+  BUY = 1;
+  SELL = 2;
+}
+
+enum ProtoOADealStatus {
+  FILLED = 2;
+  PARTIALLY_FILLED = 3;
+  REJECTED = 4;
+  INTERNALLY_REJECTED = 5;
+  ERROR = 6;
+  MISSED = 7;
+}
+
+message ProtoOADeal {
+  required int64 dealId = 1;
+  required int64 orderId = 2;
+  required int64 positionId = 3;
+  required int64 volume = 4;
+  required int64 filledVolume = 5;
+  required int64 symbolId = 6;
+  required int64 createTimestamp = 7;
+  required int64 executionTimestamp = 8;
+  optional double executionPrice = 10;
+  required ProtoOATradeSide tradeSide = 11;
+  required ProtoOADealStatus dealStatus = 12;
+  optional int64 commission = 14;
+  optional ProtoOAClosePositionDetail closePositionDetail = 16;
+}
+
+// --- Symbol list (needed to resolve a deal's numeric symbolId into a
+// human-readable symbol name like "EURUSD" for RawTrade.symbol) ---
+
+message ProtoOALightSymbol {
+  required int64 symbolId = 1;
+  optional string symbolName = 2;
+}
+
+message ProtoOASymbolsListReq {
+  required int64 ctidTraderAccountId = 2;
+  optional bool includeArchivedSymbols = 3 [default = false];
+}
+
+message ProtoOASymbolsListRes {
+  required int64 ctidTraderAccountId = 2;
+  repeated ProtoOALightSymbol symbol = 3;
+}
+
+message ProtoOADealListReq {
+  required int64 ctidTraderAccountId = 2;
+  optional int64 fromTimestamp = 3;
+  optional int64 toTimestamp = 4;
+  optional int32 maxRows = 5;
+}
+
+message ProtoOADealListRes {
+  required int64 ctidTraderAccountId = 2;
+  repeated ProtoOADeal deal = 3;
+  required bool hasMore = 4;
+}

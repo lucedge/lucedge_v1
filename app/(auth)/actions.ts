@@ -1,9 +1,8 @@
 "use server";
 
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import { track } from "@/lib/analytics";
 import { getAdminSupabase } from "@/lib/supabase/admin";
+import { getSupabase } from "@/lib/supabase/server";
 import { sendPasswordChangedEmail } from "@/lib/email/resend";
 import {
   checkLockout,
@@ -18,24 +17,6 @@ import { determinePostAuthRedirect } from "@/lib/auth/postAuthRedirect";
 const RESEND_COOLDOWN_MS = 60 * 1000;
 const RESEND_DAILY_LIMIT = 5;
 const RESEND_DAILY_WINDOW_MS = 24 * 60 * 60 * 1000;
-
-async function getSupabase() {
-  const cookieStore = await cookies();
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: (cookiesToSet) => {
-          for (const { name, value, options } of cookiesToSet) {
-            cookieStore.set(name, value, options);
-          }
-        },
-      },
-    },
-  );
-}
 
 export async function emailSignUpAction(email: string, password: string) {
   const supabase = await getSupabase();

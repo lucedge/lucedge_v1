@@ -24,6 +24,8 @@ supabase/.temp
 # Build
 dist/
 *.tsbuildinfo
+__pycache__/
+*.pyc
 
 # OS
 .DS_Store

@@ -30,7 +30,35 @@ export type AnalyticsEvent =
 	| {
 			event: "intro_slide_skipped";
 			properties: { slide_index_at_skip: number };
-	  };
+	  }
+	| { event: "broker_connect_initiated"; properties: { broker: "ctrader" | "mt5" } }
+	| {
+			event: "broker_connect_succeeded";
+			properties: { broker: "ctrader" | "mt5"; connection_count: number };
+	  }
+	| {
+			event: "broker_connect_failed";
+			properties: { broker: "ctrader" | "mt5"; reason: string };
+	  }
+	| {
+			event: "broker_connection_confirmed";
+			properties: { connection_id: string; broker: "ctrader" | "mt5" };
+	  }
+	| { event: "broker_backfill_started"; properties: { connection_id: string } }
+	| {
+			event: "broker_backfill_completed";
+			properties: { connection_id: string; trades_new: number };
+	  }
+	| {
+			event: "broker_sync_completed";
+			properties: { connection_id: string; trades_new: number };
+	  }
+	| {
+			event: "broker_sync_failed";
+			properties: { connection_id: string; error_code: string };
+	  }
+	| { event: "broker_reauth_needed"; properties: { connection_id: string } }
+	| { event: "broker_disconnected"; properties: { connection_id: string } };
 
 export function track(distinctId: string, payload: AnalyticsEvent): void {
 	try {
