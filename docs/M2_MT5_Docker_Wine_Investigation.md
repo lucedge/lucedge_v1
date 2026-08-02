@@ -222,19 +222,59 @@ scheme (reusing `mt5_bridge.py`'s `decrypt_credential`), connects via
 `mt5linux.MetaTrader5(host="localhost", port=8001)`, calls `initialize()`
 exactly as shown above.
 
+## Multi-instance test — the core scaling assumption, validated
+
+A second, fully independent container (`mt5-2`) was built from the same
+image, with its own named volume (fresh Wine prefix — none of the first
+container's state was reused) and its own port mapping (`3006:3000`,
+`8002:8001`). The same resolved MT5 install was copied in and Python/packages
+installed the same way (see the recipe above).
+
+**Result: both containers ran real, independent logins simultaneously, with
+zero interference.**
+
+| Container | Account | Server | Result |
+|---|---|---|---|
+| `mt5` | `10011928289` | `MetaQuotes-Demo` | ✅ re-verified working *while `mt5-2` was also active* |
+| `mt5` | `40042522` | `KatoPrime-Live` | ✅ (tested earlier, single-instance) |
+| `mt5-2` | `145752898` | `Exness-MT5Real17` | ✅ fresh Wine prefix, own volume/ports, first attempt |
+
+One new issue hit and fixed while setting up the second container:
+
+### 12. A second Wine prefix hits the Mono dialog again, and killing it wrong corrupts the prefix
+A brand-new Wine prefix (separate volume = separate `WINEPREFIX`) hits the
+exact same Mono auto-install dialog as Issue 8, for the same reason: it's
+never booted before. Killing individual processes (`pkill -f terminal64.exe`,
+even `pkill -9 -f wine`) does **not** reliably tear down the session — Wine
+runs one `wineserver` per prefix, and other processes (`services.exe`,
+`explorer.exe`, the stuck dialog) survive because their names/paths don't
+match a `wine`-pattern kill, and a *second* `wine` invocation with a
+different `WINEDLLOVERRIDES` just attaches to the still-running server
+instead of applying the new setting. Force-killing the remaining processes by
+PID got rid of the dialog but left the prefix corrupted:
+`wine: could not load kernel32.dll, status c0000135` on the next launch —
+unrecoverable short of wiping it.
+**Fix:** `wineserver -k` to cleanly stop the *entire* session for that prefix
+before ever relaunching with different settings — never kill individual
+processes. If a prefix does get corrupted, the fastest recovery is `rm -rf
+/config/.wine` and start over (re-copy the MT5 install, `chown`, relaunch)
+rather than trying to repair it. **Set `WINEDLLOVERRIDES="mscoree=,mshtml="`
+on the very first launch of a fresh prefix, not as a fix applied after the
+fact** — avoids this whole failure mode.
+
 ## What is NOT done yet — do not treat this as production-ready
 
 1. **Nothing above is baked into a Dockerfile.** Every fix was applied by hand
    to a *running* container via `docker exec`/`docker cp`. A fresh `docker
    compose build && up` right now would hit every one of these issues again,
-   in the same order. The next step is encoding all eleven fixes into a
+   in the same order. The next step is encoding all twelve fixes into a
    proper, from-scratch image build (line-ending fix, correct user, numpy
-   pin, resolved-data overlay, and the corrected `mt5linux` invocation all
-   need to become build-time steps, not manual patches).
-2. **Only one instance has been tested.** The cost/scaling plan depends on
-   running several MT5-under-Wine instances side by side on one host — that
-   has not been validated under Wine yet (it *was* validated natively on
-   Windows earlier in the session).
+   pin, resolved-data overlay, `WINEDLLOVERRIDES` set from the first launch,
+   and the corrected `mt5linux` invocation all need to become build-time
+   steps, not manual patches).
+2. ~~Only one instance has been tested~~ — **done**, see above: two fully
+   independent containers, three accounts across two brokers, verified
+   running simultaneously with no cross-interference.
 3. **`mt5_bridge.py` itself hasn't been adapted.** It still does
    `import MetaTrader5 as mt5` directly; using this container in production
    means switching that to the `mt5linux` client pattern shown above.
